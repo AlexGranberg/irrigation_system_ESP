@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "auto_watering_ESP",
-    "project_version":    "b868e23-dirty",
+    "project_version":    "4900235-dirty",
     "project_path":       "C:/Users/alexa/source/Embedded/auto_watering_ESP",
     "idf_path":           "C:/Users/alexa/esp/esp-idf",
     "build_dir":          "C:/Users/alexa/source/Embedded/auto_watering_ESP/build",
@@ -785,12 +785,12 @@
             "dir": "C:/Users/alexa/source/Embedded/auto_watering_ESP/main",
             "type": "LIBRARY",
             "lib": "__idf_main",
-            "reqs": [ "driver" ],
+            "reqs": [ "driver", "esp_wifi", "nvs_flash", "esp_http_client" ],
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/Users/alexa/source/Embedded/auto_watering_ESP/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/main.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/ssd1306.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/ssd1306_fonts.c" ],
+            "sources": [ "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/main.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/ssd1306.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/ssd1306_fonts.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/connect_wifi.c" ],
             "include_dirs": [ "include" ]
         },
         "mbedtls": {
