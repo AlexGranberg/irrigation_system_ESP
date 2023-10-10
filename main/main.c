@@ -9,6 +9,7 @@
 #include "esp_log.h"
 #include "esp_system.h"
 
+#include "dht.h"
 #include "ssd1306.h"
 #include "connect_wifi.h"
 #include "esp_http_client.h"
@@ -18,6 +19,7 @@
 #define I2C_MASTER_NUM I2C_NUM_1    /*!< I2C port number for master dev */
 #define I2C_MASTER_FREQ_HZ 100000   /*!< I2C master clock frequency */
 
+#define DHT_READ_DATA 16
 
 static const char *TAG = "HTTP_CLIENT";
 
@@ -25,18 +27,15 @@ char api_key[] = "CMV42NIJPYJJTSK6";
 
 char message[] = "Hello This is a test message";
 
-unsigned int getDummyData(void){
-    uint16_t data;
-    data = rand() % 100;
-    return data;
-}
+int16_t humidity = 0;
+int16_t temperature = 0;
 
 void thingspeak_send_data(void *pvParameters)
 {
     while (1)
     {
-        uint16_t data1 = getDummyData();
-        uint16_t data2 = getDummyData();
+        float humidity_float = (float)humidity / 10.0;
+        float temperature_float = (float)temperature / 10.0;
         char thingspeak_url[200];
         // snprintf(thingspeak_url,
         //          sizeof(thingspeak_url),
@@ -46,10 +45,10 @@ void thingspeak_send_data(void *pvParameters)
         //          "&field1=", data1, "&field2=", data2);
         snprintf(thingspeak_url,
                 sizeof(thingspeak_url),
-                "%s%s&field1=%d&field2=%d",
+                "%s%s&field1=%.1f&field2=%.1f",
                 "https://api.thingspeak.com/update?api_key=",
                 api_key,
-                data1, data2);
+                humidity_float, temperature_float);
 
         esp_http_client_config_t config = {
             .url = thingspeak_url,
@@ -83,10 +82,17 @@ void thingspeak_send_data(void *pvParameters)
     }
 }
 
-static ssd1306_handle_t ssd1306_dev = NULL;
+void dht22_task(void *pvParameters){
 
-void app_main(void)
-{
+    while(1){
+        esp_err_t dhtResult = dht_read_data(DHT_TYPE_AM2301, DHT_READ_DATA, &humidity, &temperature);
+
+        vTaskDelay(20000 / portTICK_PERIOD_MS);
+    }
+}
+
+void ssd1306_task(void *pvParameters){
+    static ssd1306_handle_t ssd1306_dev = NULL;
     i2c_config_t conf;
     conf.mode = I2C_MODE_MASTER;
     conf.sda_io_num = (gpio_num_t)I2C_MASTER_SDA_IO;
@@ -104,16 +110,30 @@ void app_main(void)
     ssd1306_clear_screen(ssd1306_dev, 0x00);
 
     char data_str1[20] = {0};
-    char data_str2[20] = {0};
-    char data_str3[20] = {0};
-    sprintf(data_str1, "Soil: 75%%");
-    sprintf(data_str2, "Temperature: 22c");
-    sprintf(data_str3, "Humidity: 62%%");
-    ssd1306_draw_string(ssd1306_dev, 10, 5, (const uint8_t *)data_str1, 12, 1);
-    ssd1306_draw_string(ssd1306_dev, 10, 25, (const uint8_t *)data_str2, 12, 1);
-    ssd1306_draw_string(ssd1306_dev, 10, 45, (const uint8_t *)data_str3, 12, 1);
-    ssd1306_refresh_gram(ssd1306_dev);
+    char data_str2[25] = {0};
+    char data_str3[40] = {0};
 
+    while (1) {
+        // Update data strings based on DHT22 data or other sensors
+        snprintf(data_str1, sizeof(data_str1), "Humidity: %.1f%%", (float)humidity / 10.0);
+        snprintf(data_str2, sizeof(data_str2), "Temperature: %.1fc", (float)temperature / 10.0);
+        // snprintf(data_str1, sizeof(data_str1), "Humidity: %d%%", humidity);
+        // snprintf(data_str2, sizeof(data_str2), "Temperature: %dc", temperature);
+
+        // Clear the SSD1306 screen
+        // ...
+
+        // Draw strings on the SSD1306 display
+        ssd1306_draw_string(ssd1306_dev, 10, 5, (const uint8_t *)data_str1, 12, 1);
+        ssd1306_draw_string(ssd1306_dev, 10, 25, (const uint8_t *)data_str2, 12, 1);
+        ssd1306_draw_string(ssd1306_dev, 10, 45, (const uint8_t *)data_str3, 12, 1);
+        ssd1306_refresh_gram(ssd1306_dev);
+
+        vTaskDelay(20000 / portTICK_PERIOD_MS); // Delay for 20 seconds
+    }
+}
+
+void app_main(void){
 
     esp_err_t ret = nvs_flash_init();
 	if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
@@ -123,8 +143,11 @@ void app_main(void)
 	}
 	ESP_ERROR_CHECK(ret);
 	connect_wifi();
-	if (wifi_connect_status)
-	{
+	if (wifi_connect_status){
 		xTaskCreate(thingspeak_send_data, "thingspeak_send_data", 8192, NULL, 6, NULL);
+        xTaskCreate(dht22_task, "dht22_task", 4096, NULL, 5, NULL);
+        xTaskCreate(ssd1306_task, "ssd1306_task", 4096, NULL, 4, NULL);
 	}
+
+
 }
