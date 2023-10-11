@@ -27,7 +27,7 @@
 
 static const char *TAG = "HTTP_CLIENT";
 
-char api_key[] = "CMV42NIJPYJJTSK6";
+char api_key[] = "AI7LUUZI0USAXOAJ";
 
 char message[] = "Hello This is a test message";
 
@@ -51,10 +51,10 @@ void thingspeak_send_data(void *pvParameters)
         //          "&field1=", data1, "&field2=", data2);
         snprintf(thingspeak_url,
                 sizeof(thingspeak_url),
-                "%s%s&field1=%.1f&field2=%.1f",
+                "%s%s&field1=%.1f&field2=%.1f&field3=%d",
                 "https://api.thingspeak.com/update?api_key=",
                 api_key,
-                humidity_float, temperature_float);
+                humidity_float, temperature_float, adc_percentage);
 
         esp_http_client_config_t config = {
             .url = thingspeak_url,
@@ -93,28 +93,30 @@ void dht22_task(void *pvParameters){
     while(1){
         esp_err_t dhtResult = dht_read_data(DHT_TYPE_AM2301, DHT_READ_DATA, &humidity, &temperature);
 
-        vTaskDelay(2000 / portTICK_PERIOD_MS);
+        vTaskDelay(20000 / portTICK_PERIOD_MS);
     }
 }
 
 void setup(){
     yl69_setup(ADC_CHANNEL_6);
 
+
+}
+
+static void yl69_task(void *arg) {
+    
     // Configure YL-69 power control pin as an output
     esp_rom_gpio_pad_select_gpio(YL69_READ_ACTIVE);
     gpio_set_direction(YL69_READ_ACTIVE, GPIO_MODE_OUTPUT);
     // Turn off the YL-69 sensor initially
     gpio_set_level(YL69_READ_ACTIVE, 0);
-}
-
-static void yl69_task(void *arg) {
-    char yl69_buffer[1024];
 
     while(1) {
 
         gpio_set_level(YL69_READ_ACTIVE, 1);
-
+        uint16_t adc_5VReading = 1050;
         adc_reading = yl69_read();
+        adc_reading = adc_reading - adc_5VReading; 
         ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_reading); // Add this line for debugging
         adc_percentage = yl69_normalization(adc_reading);
         // snprintf(yl69_buffer, sizeof(yl69_buffer), "{\"soil_mosture\": %d}", adc_percentage);
@@ -123,7 +125,7 @@ static void yl69_task(void *arg) {
 
         gpio_set_level(YL69_READ_ACTIVE, 0);
 
-        vTaskDelay(500 / portTICK_PERIOD_MS);
+        vTaskDelay(19500 / portTICK_PERIOD_MS);
     }
     
     //vTaskDelete(NULL); 
