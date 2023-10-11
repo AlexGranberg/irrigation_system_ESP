@@ -131,7 +131,7 @@ static void yl69_task(void *arg) {
         gpio_set_level(YL69_READ_ACTIVE, 0);
         gpio_set_level(PUMP, 0);
 
-        vTaskDelay(19500 / portTICK_PERIOD_MS);
+        vTaskDelay(5000 / portTICK_PERIOD_MS);
     }
     
     //vTaskDelete(NULL); 
