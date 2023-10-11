@@ -24,6 +24,7 @@
 #define YL69_READ_ACTIVE 17
 #define YL69_ADC_CHANNEL 4
 #define ADC_CHANNEL_6 36
+#define PUMP 27
 
 static const char *TAG = "HTTP_CLIENT";
 
@@ -91,7 +92,7 @@ void thingspeak_send_data(void *pvParameters)
 void dht22_task(void *pvParameters){
 
     while(1){
-        esp_err_t dhtResult = dht_read_data(DHT_TYPE_AM2301, DHT_READ_DATA, &humidity, &temperature);
+        dht_read_data(DHT_TYPE_AM2301, DHT_READ_DATA, &humidity, &temperature);
 
         vTaskDelay(20000 / portTICK_PERIOD_MS);
     }
@@ -108,22 +109,27 @@ static void yl69_task(void *arg) {
     // Configure YL-69 power control pin as an output
     esp_rom_gpio_pad_select_gpio(YL69_READ_ACTIVE);
     gpio_set_direction(YL69_READ_ACTIVE, GPIO_MODE_OUTPUT);
+
+    esp_rom_gpio_pad_select_gpio(PUMP);
+    gpio_set_direction(PUMP, GPIO_MODE_OUTPUT);
+    gpio_set_level(PUMP, 0);
     // Turn off the YL-69 sensor initially
     gpio_set_level(YL69_READ_ACTIVE, 0);
 
     while(1) {
 
         gpio_set_level(YL69_READ_ACTIVE, 1);
+        gpio_set_level(PUMP, 1);
         uint16_t adc_5VReading = 1050;
         adc_reading = yl69_read();
         adc_reading = adc_reading - adc_5VReading; 
-        ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_reading); // Add this line for debugging
+        //ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_reading); // Add this line for debugging
         adc_percentage = yl69_normalization(adc_reading);
-        // snprintf(yl69_buffer, sizeof(yl69_buffer), "{\"soil_mosture\": %d}", adc_percentage);
-        // printf("%s\n", yl69_buffer);
+
         vTaskDelay(500 / portTICK_PERIOD_MS);
 
         gpio_set_level(YL69_READ_ACTIVE, 0);
+        gpio_set_level(PUMP, 0);
 
         vTaskDelay(19500 / portTICK_PERIOD_MS);
     }
@@ -158,8 +164,6 @@ void ssd1306_task(void *pvParameters){
         snprintf(data_str1, sizeof(data_str1), "Humidity: %.1f%%", (float)humidity / 10.0);
         snprintf(data_str2, sizeof(data_str2), "Temperature: %.1fc", (float)temperature / 10.0);
         snprintf(data_str3, sizeof(data_str3), "Soil: %d%%", adc_percentage);
-        // snprintf(data_str1, sizeof(data_str1), "Humidity: %d%%", humidity);
-        // snprintf(data_str2, sizeof(data_str2), "Temperature: %dc", temperature);
 
         // Clear the SSD1306 screen
         ssd1306_clear_screen(ssd1306_dev, 0x00);

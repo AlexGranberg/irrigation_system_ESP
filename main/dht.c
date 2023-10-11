@@ -149,7 +149,7 @@ static inline esp_err_t dht_fetch_data(dht_sensor_type_t sensor_type, gpio_num_t
     gpio_set_level(pin, 1);
 
     // Step through Phase 'B', 40us
-    CHECK_LOGE(dht_await_pin_state(pin, 40, 0, NULL),
+    CHECK_LOGE(dht_await_pin_state(pin, 45, 0, NULL),
             "Initialization error, problem in phase 'B'");
     // Step through Phase 'C', 88us
     CHECK_LOGE(dht_await_pin_state(pin, 88, 1, NULL),
