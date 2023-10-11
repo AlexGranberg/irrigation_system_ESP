@@ -160,6 +160,7 @@ void ssd1306_task(void *pvParameters){
         // snprintf(data_str2, sizeof(data_str2), "Temperature: %dc", temperature);
 
         // Clear the SSD1306 screen
+        ssd1306_clear_screen(ssd1306_dev, 0x00);
         // ...
 
         // Draw strings on the SSD1306 display
