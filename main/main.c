@@ -14,6 +14,7 @@
 #include "ssd1306.h"
 #include "connect_wifi.h"
 #include "esp_http_client.h"
+#include "ultrasonic.h"
 
 #define I2C_MASTER_SCL_IO 26        /*!< gpio number for I2C master clock */
 #define I2C_MASTER_SDA_IO 25        /*!< gpio number for I2C master data  */
@@ -27,6 +28,7 @@
 #define PUMP 27
 
 static const char *TAG = "HTTP_CLIENT";
+static const char *TAG2 = "ultrasonic";
 
 char api_key[] = "AI7LUUZI0USAXOAJ";
 
@@ -37,7 +39,12 @@ int16_t temperature = 0;
 int16_t adc_reading = 0;
 int16_t adc_percentage = 0;
 SemaphoreHandle_t adc_semaphore = NULL;
+uint16_t distance_cm;
 
+ultrasonic_sensor_t ultrasonic = {
+    .trigger_pin = 0,
+    .echo_pin = 2,
+};
 
 void thingspeak_send_data(void *pvParameters)
 {
@@ -236,7 +243,24 @@ void ssd1306_task(void *pvParameters){
         ssd1306_draw_string(ssd1306_dev, 10, 45, (const uint8_t *)data_str3, 12, 1);
         ssd1306_refresh_gram(ssd1306_dev);
 
-        vTaskDelay(2000 / portTICK_PERIOD_MS); // Delay for 20 seconds
+        vTaskDelay(10000 / portTICK_PERIOD_MS); // Delay for 20 seconds
+
+                // Update data strings based on DHT22 data or other sensors
+        snprintf(data_str1, sizeof(data_str1), "PUMP OFF");
+        snprintf(data_str2, sizeof(data_str2), "Water level: %dcm", distance_cm);
+        snprintf(data_str3, sizeof(data_str3), "WIFI ON");
+
+        // Clear the SSD1306 screen
+        ssd1306_clear_screen(ssd1306_dev, 0x00);
+        // ...
+
+        // Draw strings on the SSD1306 display
+        ssd1306_draw_string(ssd1306_dev, 10, 5, (const uint8_t *)data_str1, 12, 1);
+        ssd1306_draw_string(ssd1306_dev, 10, 25, (const uint8_t *)data_str2, 12, 1);
+        ssd1306_draw_string(ssd1306_dev, 10, 45, (const uint8_t *)data_str3, 12, 1);
+        ssd1306_refresh_gram(ssd1306_dev);
+
+        vTaskDelay(10000 / portTICK_PERIOD_MS); // Delay for 20 seconds
     }
 }
 
@@ -288,6 +312,19 @@ void ssd1306_task(void *pvParameters){
 //     }
 // }
 
+void ultrasonic_task(void *pvParameters){
+    esp_err_t res = ultrasonic_init(&ultrasonic);
+
+    while (1){
+        res = ultrasonic_measure_cm(&ultrasonic, 50, &distance_cm);
+
+        if (res == ESP_OK) {
+            ESP_LOGI(TAG2, "measure %d", distance_cm);
+        }
+        vTaskDelay(5000 / portTICK_PERIOD_MS);
+    }
+    
+}
 
 void app_main(void){
 
@@ -303,11 +340,12 @@ void app_main(void){
 	connect_wifi();
 	if (wifi_connect_status){
 		xTaskCreate(thingspeak_send_data, "thingspeak_send_data", 8192, NULL, 6, NULL);
-        xTaskCreate(dht22_task, "dht22_task", 4096, NULL, 5, NULL);
-        xTaskCreate(yl69_task, "yl69_task", 4*1024, NULL, 4, NULL);
-        xTaskCreate(ssd1306_task, "ssd1306_task", 4096, NULL, 3, NULL);
         //xTaskCreate(pump_task, "pump_task", 4096, NULL, 2, NULL);
         // xTaskCreate(control_pump, "control_pump", 4096, NULL, 2, NULL);
 	}
 
+    xTaskCreate(dht22_task, "dht22_task", 4096, NULL, 5, NULL);
+    xTaskCreate(yl69_task, "yl69_task", 4*1024, NULL, 4, NULL);
+    xTaskCreate(ssd1306_task, "ssd1306_task", 4096, NULL, 3, NULL);
+    xTaskCreate(ultrasonic_task, "ultrasonic_task", 4096, NULL, 2, NULL);
 }
