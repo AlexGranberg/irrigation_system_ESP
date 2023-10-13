@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "auto_watering_ESP",
-    "project_version":    "c769a1a-dirty",
+    "project_version":    "3fdcefa-dirty",
     "project_path":       "C:/Users/alexa/source/Embedded/auto_watering_ESP",
     "idf_path":           "C:/Users/alexa/esp/esp-idf",
     "build_dir":          "C:/Users/alexa/source/Embedded/auto_watering_ESP/build",

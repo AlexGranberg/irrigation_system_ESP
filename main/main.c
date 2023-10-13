@@ -42,8 +42,11 @@ int16_t temperature = 0;
 int16_t adc_reading = 0;
 int16_t adc_percentage = 50;
 SemaphoreHandle_t adc_semaphore = NULL;
-uint16_t distance_cm;
-uint16_t distance_percentage;
+//uint16_t distance_cm;
+float distance_cm;
+//uint16_t distance_percentage;
+float distance_percentage;
+uint16_t distance_percentage_rounded;
 
 ultrasonic_sensor_t ultrasonic = {
     .trigger_pin = 0,
@@ -68,7 +71,7 @@ void thingspeak_send_data(void *pvParameters)
                 "%s%s&field1=%.1f&field2=%.1f&field3=%d&field4=%d",
                 "https://api.thingspeak.com/update?api_key=",
                 api_key,
-                humidity_float, temperature_float, adc_percentage, distance_percentage);
+                humidity_float, temperature_float, adc_percentage, distance_percentage_rounded);
 
         esp_http_client_config_t config = {
             .url = thingspeak_url,
@@ -362,9 +365,15 @@ void ultrasonic_task(void *pvParameters){
 
         if (res == ESP_OK) {
             distance_percentage = calculate_percentage(distance_cm);
-            ESP_LOGI(TAG2, "measure %d, percentage = %.d", distance_cm, distance_percentage);
+            uint16_t rounded_distance_cm = (int)(distance_cm + 0.5); // Round to the nearest integer
+            distance_percentage_rounded = (int)(distance_percentage + 0.5); // Round to the nearest integer
+            //ESP_LOGI(TAG2, "measure %d, percentage = %d", rounded_distance_cm, distance_percentage_rounded);
+            ESP_LOGI(TAG2, "measure %d, distance_cm = %.2f, distance_percentage = %d", rounded_distance_cm, distance_cm, distance_percentage_rounded);
+
+
+
         }
-        vTaskDelay(20000 / portTICK_PERIOD_MS);
+        vTaskDelay(5000 / portTICK_PERIOD_MS);
     }
     
 }

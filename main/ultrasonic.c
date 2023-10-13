@@ -131,13 +131,15 @@ esp_err_t ultrasonic_measure(const ultrasonic_sensor_t *dev, float max_distance,
     return ESP_OK;
 }
 
-esp_err_t ultrasonic_measure_cm(const ultrasonic_sensor_t *dev, uint32_t max_distance, uint32_t *distance)
+//esp_err_t ultrasonic_measure_cm(const ultrasonic_sensor_t *dev, uint32_t max_distance, uint32_t *distance)
+esp_err_t ultrasonic_measure_cm(const ultrasonic_sensor_t *dev, uint32_t max_distance, float *distance)
 {
     CHECK_ARG(dev && distance);
 
     uint32_t time_us;
     CHECK(ultrasonic_measure_raw(dev, max_distance * ROUNDTRIP_CM, &time_us));
-    *distance = time_us / ROUNDTRIP_CM;
+    //*distance = time_us / ROUNDTRIP_CM;
+    *distance = (float)time_us / ROUNDTRIP_CM; 
 
     return ESP_OK;
 }
