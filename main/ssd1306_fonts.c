@@ -675,3 +675,64 @@ const uint8_t c_chGPRS88[8] = //GPRS
 
 const uint8_t c_chAlarm88[8] = //alram
 { 0xC3, 0xBD, 0x42, 0x52, 0x4E, 0x42, 0x3C, 0xC3 };
+
+const uint8_t c_chWiFiConnected88[8] = //Connected WIFI
+{ 0xFF, 0x00, 0x7E, 0x00, 0x3C, 0x00, 0x18, 0x00 };
+
+const uint8_t c_chWiFiDisconnected88[8] = //Disconnected WIFI
+{ 0x81, 0x42, 0x24, 0x18, 0x18, 0x24, 0x42, 0x81 };
+
+const uint8_t c_chwaterSquareEmpty88[8] = {
+    0x81,  // X......X
+    0x81,  // X......X
+    0x81,  // X......X
+    0x81,  // X......X
+    0x81,  // X......X
+    0x81,  // X......X
+    0x81,  // X......X
+    0xFF   // XXXXXXXX
+};
+
+const uint8_t c_chwaterSquareQuarter88[8] = {
+    0x81,  // X......X
+    0x81,  // X......X
+    0x81,  // X......X
+    0x81,  // X......X
+    0x81,  // X......X
+    0x81,  // X......X
+    0xFF,  // XXXXXXXX
+    0xFF   // XXXXXXXX
+};
+
+const uint8_t c_chwaterSquareHalf88[8] = {
+    0x81,  // X......X
+    0x81,  // X......X
+    0x81,  // X......X
+    0x81,  // X......X
+    0xFF,  // XXXXXXXX
+    0xFF,  // XXXXXXXX
+    0xFF,  // XXXXXXXX
+    0xFF   // XXXXXXXX
+};
+
+const uint8_t c_chwaterSquareThreeQuarter88[8] = {
+    0x81,  // X......X
+    0x81,  // X......X
+    0xFF,  // XXXXXXXX
+    0xFF,  // XXXXXXXX
+    0xFF,  // XXXXXXXX
+    0xFF,  // XXXXXXXX
+    0xFF,  // XXXXXXXX
+    0xFF   // XXXXXXXX
+};
+
+const uint8_t c_chwaterSquareFull88[8] = {
+    0xFF,  // XXXXXXXX
+    0xFF,  // XXXXXXXX
+    0xFF,  // XXXXXXXX
+    0xFF,  // XXXXXXXX
+    0xFF,  // XXXXXXXX
+    0xFF,  // XXXXXXXX
+    0xFF,  // XXXXXXXX
+    0xFF   // XXXXXXXX
+};
