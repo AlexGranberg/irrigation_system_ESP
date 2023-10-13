@@ -65,10 +65,10 @@ void thingspeak_send_data(void *pvParameters)
         //          "&field1=", data1, "&field2=", data2);
         snprintf(thingspeak_url,
                 sizeof(thingspeak_url),
-                "%s%s&field1=%.1f&field2=%.1f&field3=%d",
+                "%s%s&field1=%.1f&field2=%.1f&field3=%d&field4=%d",
                 "https://api.thingspeak.com/update?api_key=",
                 api_key,
-                humidity_float, temperature_float, adc_percentage);
+                humidity_float, temperature_float, adc_percentage, distance_percentage);
 
         esp_http_client_config_t config = {
             .url = thingspeak_url,
