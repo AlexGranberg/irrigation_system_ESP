@@ -9,6 +9,7 @@
 #include "esp_log.h"
 #include "esp_system.h"
 
+#include "yl69_task.h"
 #include "yl69.h"
 #include "dht.h"
 #include "ssd1306.h"
@@ -22,10 +23,10 @@
 #define I2C_MASTER_FREQ_HZ 100000   /*!< I2C master clock frequency */
 
 #define DHT_READ_DATA 16
-#define YL69_READ_ACTIVE 17
-#define YL69_ADC_CHANNEL 4
-#define ADC_CHANNEL_6 36
-#define PUMP 27
+//#define YL69_READ_ACTIVE 17
+//#define YL69_ADC_CHANNEL 4
+//#define ADC_CHANNEL_6 36
+//#define PUMP 27
 
 #define FULL_DISTANCE_CM 1
 #define EMPTY_DISTANCE_CM 8
@@ -39,8 +40,8 @@ char message[] = "Hello This is a test message";
 
 int16_t humidity = 0;
 int16_t temperature = 0;
-int16_t adc_reading = 0;
-int16_t adc_percentage = 50;
+//int16_t adc_reading = 0;
+//int16_t adc_percentage = 50;
 SemaphoreHandle_t adc_semaphore = NULL;
 //uint16_t distance_cm;
 float distance_cm;
@@ -52,6 +53,11 @@ ultrasonic_sensor_t ultrasonic = {
     .trigger_pin = 0,
     .echo_pin = 2,
 };
+
+void setup(){
+    yl69_setup(YL69_ADC_CHANNEL);
+    
+}
 
 void thingspeak_send_data(void *pvParameters)
 {
@@ -113,104 +119,6 @@ void dht22_task(void *pvParameters){
         vTaskDelay(20000 / portTICK_PERIOD_MS);
     }
 }
-
-void setup(){
-    yl69_setup(ADC_CHANNEL_6);
-
-
-}
-
-// static void yl69_task(void *arg) {
-//     uint32_t reading_interval = 20000;
-//     // Configure YL-69 power control pin as an output
-//     esp_rom_gpio_pad_select_gpio(YL69_READ_ACTIVE);
-//     gpio_set_direction(YL69_READ_ACTIVE, GPIO_MODE_OUTPUT);
-
-//     // Turn off the YL-69 sensor initially
-//     gpio_set_level(YL69_READ_ACTIVE, 0);
-
-//     while(1) {
-
-//         gpio_set_level(YL69_READ_ACTIVE, 1);
-
-//         uint16_t adc_5VReading = 1050;
-//         adc_reading = yl69_read();
-//         adc_reading = adc_reading - adc_5VReading; 
-//         //ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_reading); // Add this line for debugging
-//         adc_percentage = yl69_normalization(adc_reading);
-
-//         vTaskDelay(500 / portTICK_PERIOD_MS);
-
-//         if (adc_percentage < 40) {
-//             // Soil is dry, increase reading frequency to 1 second
-
-//             //ADD PUMP CONTROLL HERE OR USE ANOTHER TASK FOR THAT?
-
-//             reading_interval = 1000;
-//         } else if (adc_percentage > 60) {
-//             // Soil is wet, decrease reading frequency to 20 seconds
-//             reading_interval = 20000;
-//         }
-//         gpio_set_level(YL69_READ_ACTIVE, 0);
-
-//         vTaskDelay(reading_interval / portTICK_PERIOD_MS);
-//     }
-    
-//     //vTaskDelete(NULL); 
-// }
-
-static void yl69_task(void *arg) {
-    uint32_t reading_interval = 20000;
-    uint8_t pump_state = 0; // 0: Pump is off, 1: Pump is on
-
-    // Configure YL-69 power control pin as an output
-    esp_rom_gpio_pad_select_gpio(YL69_READ_ACTIVE);
-    gpio_set_direction(YL69_READ_ACTIVE, GPIO_MODE_OUTPUT);
-
-    // Turn off the YL-69 sensor initially
-    gpio_set_level(YL69_READ_ACTIVE, 0);
-
-    // Initialize the pump pin
-    esp_rom_gpio_pad_select_gpio(PUMP);
-    gpio_set_direction(PUMP, GPIO_MODE_OUTPUT);
-    gpio_set_level(PUMP, 0);
-
-    while(1) {
-        gpio_set_level(YL69_READ_ACTIVE, 1);
-
-        uint16_t adc_5VReading = 1050;
-        adc_reading = yl69_read();
-        adc_reading = adc_reading - adc_5VReading;
-        //ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_reading); // Add this line for debugging
-        adc_percentage = yl69_normalization(adc_reading);
-
-        if (adc_percentage < 40) {
-            // Soil is dry, increase reading frequency to 1 second
-            reading_interval = 1000;
-
-            // Check if the pump is off, then turn it on
-            if (pump_state == 0) {
-                gpio_set_level(PUMP, 1);
-                pump_state = 1;
-            }
-        } else if (adc_percentage > 60) {
-            // Soil is wet, decrease reading frequency to 20 seconds
-            reading_interval = 20000;
-
-            // Check if the pump is on, then turn it off
-            if (pump_state == 1) {
-                gpio_set_level(PUMP, 0);
-                pump_state = 0;
-            }
-        }
-
-        vTaskDelay(500 / portTICK_PERIOD_MS);
-        gpio_set_level(YL69_READ_ACTIVE, 0);
-
-        vTaskDelay(reading_interval / portTICK_PERIOD_MS);
-    }
-}
-
 
 void ssd1306_task(void *pvParameters){
     static ssd1306_handle_t ssd1306_dev = NULL;
@@ -294,54 +202,6 @@ void ssd1306_task(void *pvParameters){
     }
 }
 
-// void control_pump() {
-//     esp_rom_gpio_pad_select_gpio(PUMP);
-//     gpio_set_direction(PUMP, GPIO_MODE_OUTPUT);
-//     gpio_set_level(PUMP, 0);
-
-//     if (adc_percentage < 40) {
-//         // Soil is dry, turn on the pump
-//         gpio_set_level(PUMP, 1);
-//     } else if (adc_percentage > 60) {
-//         // Soil is wet, turn off the pump
-//         gpio_set_level(PUMP, 0);
-//     }
-// }
-
-// void pump_task(void *pvParameters) {
-//     esp_rom_gpio_pad_select_gpio(PUMP);
-//     gpio_set_direction(PUMP, GPIO_MODE_OUTPUT);
-//     gpio_set_level(PUMP, 0);
-
-//     while (1) {
-//         // if (xSemaphoreTake(adc_semaphore, portMAX_DELAY) == pdTRUE) {
-//             if (adc_percentage < 40) {
-//                 gpio_set_level(PUMP, 1);
-//                 gpio_set_level(YL69_READ_ACTIVE, 1);
-
-//                 // Add a delay to allow the sensor reading to stabilize
-//                 vTaskDelay(500 / portTICK_PERIOD_MS);
-
-//                 // Read and update adc_percentage
-//                 uint16_t adc_5VReading = 1050;
-//                 adc_reading = yl69_read();
-//                 adc_reading = adc_reading - adc_5VReading;
-//                 adc_percentage = yl69_normalization(adc_reading);
-
-//                 // Turn off the pump if the soil moisture is too high
-//                 if (adc_percentage >= 60) {
-//                     gpio_set_level(PUMP, 0);
-//                     gpio_set_level(YL69_READ_ACTIVE, 0);
-//                 }
-//             // }
-//             // xSemaphoreGive(adc_semaphore);
-//         }
-
-//         // Delay between checks
-//         vTaskDelay(1000 / portTICK_PERIOD_MS);
-//     }
-// }
-
 // Calculate the percentage based on the current distance
 double calculate_percentage(double current_distance_cm) {
     // Ensure that the distance is within the valid range
@@ -398,7 +258,5 @@ void app_main(void){
     connect_wifi();
 	if (wifi_connect_status){
 		xTaskCreate(thingspeak_send_data, "thingspeak_send_data", 8192, NULL, 6, NULL);
-        //xTaskCreate(pump_task, "pump_task", 4096, NULL, 2, NULL);
-        // xTaskCreate(control_pump, "control_pump", 4096, NULL, 2, NULL);
 	}
 }
