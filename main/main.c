@@ -11,6 +11,7 @@
 
 #include "yl69_task.h"
 #include "yl69.h"
+#include "dht_task.h"
 #include "dht.h"
 #include "ssd1306.h"
 #include "connect_wifi.h"
@@ -22,7 +23,7 @@
 #define I2C_MASTER_NUM I2C_NUM_1    /*!< I2C port number for master dev */
 #define I2C_MASTER_FREQ_HZ 100000   /*!< I2C master clock frequency */
 
-#define DHT_READ_DATA 16
+//#define DHT_READ_DATA 16
 //#define YL69_READ_ACTIVE 17
 //#define YL69_ADC_CHANNEL 4
 //#define ADC_CHANNEL_6 36
@@ -38,8 +39,8 @@ char api_key[] = "AI7LUUZI0USAXOAJ";
 
 char message[] = "Hello This is a test message";
 
-int16_t humidity = 0;
-int16_t temperature = 0;
+// int16_t humidity = 0;
+// int16_t temperature = 0;
 //int16_t adc_reading = 0;
 //int16_t adc_percentage = 50;
 SemaphoreHandle_t adc_semaphore = NULL;
@@ -111,14 +112,14 @@ void thingspeak_send_data(void *pvParameters)
     }
 }
 
-void dht22_task(void *pvParameters){
+// void dht22_task(void *pvParameters){
 
-    while(1){
-        dht_read_data(DHT_TYPE_AM2301, DHT_READ_DATA, &humidity, &temperature);
+//     while(1){
+//         dht_read_data(DHT_TYPE_AM2301, DHT_READ_DATA, &humidity, &temperature);
 
-        vTaskDelay(20000 / portTICK_PERIOD_MS);
-    }
-}
+//         vTaskDelay(20000 / portTICK_PERIOD_MS);
+//     }
+// }
 
 void ssd1306_task(void *pvParameters){
     static ssd1306_handle_t ssd1306_dev = NULL;
