@@ -112,15 +112,6 @@ void thingspeak_send_data(void *pvParameters)
     }
 }
 
-// void dht22_task(void *pvParameters){
-
-//     while(1){
-//         dht_read_data(DHT_TYPE_AM2301, DHT_READ_DATA, &humidity, &temperature);
-
-//         vTaskDelay(20000 / portTICK_PERIOD_MS);
-//     }
-// }
-
 void ssd1306_task(void *pvParameters){
     static ssd1306_handle_t ssd1306_dev = NULL;
     i2c_config_t conf;
