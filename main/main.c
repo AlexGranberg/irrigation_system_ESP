@@ -19,20 +19,11 @@
 #include "esp_http_client.h"
 #include "ultrasonic.h"
 #include "ultrasonic_task.h"
-
-
-static const char *TAG = "HTTP_CLIENT";
-
-char api_key[] = "AI7LUUZI0USAXOAJ";
-
-char message[] = "Hello This is a test message";
+#include "send_data_task.h"
 
 
 SemaphoreHandle_t adc_semaphore = NULL;
 
-float distance_cm;
-float distance_percentage;
-uint16_t distance_percentage_rounded;
 
 
 void setup(){
@@ -40,57 +31,6 @@ void setup(){
     
 }
 
-void thingspeak_send_data(void *pvParameters)
-{
-    while (1)
-    {
-        float humidity_float = (float)humidity / 10.0;
-        float temperature_float = (float)temperature / 10.0;
-        char thingspeak_url[200];
-        // snprintf(thingspeak_url,
-        //          sizeof(thingspeak_url),
-        //          "%s%s%s%s%s",
-        //          "https://api.thingspeak.com/update?api_key=",
-        //          api_key,
-        //          "&field1=", data1, "&field2=", data2);
-        snprintf(thingspeak_url,
-                sizeof(thingspeak_url),
-                "%s%s&field1=%.1f&field2=%.1f&field3=%d&field4=%d",
-                "https://api.thingspeak.com/update?api_key=",
-                api_key,
-                humidity_float, temperature_float, adc_percentage, distance_percentage_rounded);
-
-        esp_http_client_config_t config = {
-            .url = thingspeak_url,
-            .method = HTTP_METHOD_GET,
-        };
-
-        esp_http_client_handle_t client = esp_http_client_init(&config);
-        esp_http_client_set_header(client, "Content-Type", "application/x-www-form-urlencoded");
-
-        esp_err_t err = esp_http_client_perform(client);
-
-        if (err == ESP_OK)
-        {
-            int status_code = esp_http_client_get_status_code(client);
-            if (status_code == 200)
-            {
-                ESP_LOGI(TAG, "Message sent Successfully");
-            }
-            else
-            {
-                ESP_LOGI(TAG, "Message sent Failed");
-            }
-        }
-        else
-        {
-            ESP_LOGI(TAG, "Message sent Failed");
-        }
-        esp_http_client_cleanup(client);
-
-        vTaskDelay(60000 / portTICK_PERIOD_MS); // Delay for 20 seconds
-    }
-}
 
 
 void app_main(void){

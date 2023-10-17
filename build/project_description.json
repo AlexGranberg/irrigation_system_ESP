@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "auto_watering_ESP",
-    "project_version":    "9c9ab36-dirty",
+    "project_version":    "5408335-dirty",
     "project_path":       "C:/Users/alexa/source/Embedded/auto_watering_ESP",
     "idf_path":           "C:/Users/alexa/esp/esp-idf",
     "build_dir":          "C:/Users/alexa/source/Embedded/auto_watering_ESP/build",
@@ -790,7 +790,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/Users/alexa/source/Embedded/auto_watering_ESP/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/main.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/ssd1306.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/ssd1306_fonts.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/connect_wifi.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/dht.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/yl69.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/ultrasonic.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/yl69_task.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/dht_task.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/ultrasonic_task.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/ssd1306_task.c" ],
+            "sources": [ "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/main.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/ssd1306.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/ssd1306_fonts.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/connect_wifi.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/dht.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/yl69.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/ultrasonic.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/yl69_task.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/dht_task.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/ultrasonic_task.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/ssd1306_task.c", "C:/Users/alexa/source/Embedded/auto_watering_ESP/main/send_data_task.c" ],
             "include_dirs": [ "include" ]
         },
         "mbedtls": {
