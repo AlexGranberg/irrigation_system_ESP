@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <inttypes.h>
 #include "sdkconfig.h"
@@ -22,16 +21,6 @@
 #include "send_data_task.h"
 
 
-SemaphoreHandle_t adc_semaphore = NULL;
-
-
-
-void setup(){
-    yl69_setup(YL69_ADC_CHANNEL);
-    
-}
-
-
 
 void app_main(void){
 
@@ -42,8 +31,6 @@ void app_main(void){
 		ret = nvs_flash_init();
 	}
 	ESP_ERROR_CHECK(ret);
-
-    adc_semaphore = xSemaphoreCreateMutex();
 
     xTaskCreate(dht22_task, "dht22_task", 4096, NULL, 5, NULL);
     xTaskCreate(yl69_task, "yl69_task", 4*1024, NULL, 4, NULL);

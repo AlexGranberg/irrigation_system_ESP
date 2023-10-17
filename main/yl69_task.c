@@ -19,6 +19,11 @@
 uint16_t adc_reading = 0;
 uint16_t adc_percentage = 50;
 
+void setup(){
+    yl69_setup(YL69_ADC_CHANNEL);
+    
+}
+
 void yl69_task(void *arg) {
     uint32_t reading_interval = 20000;
     uint8_t pump_state = 0; // 0: Pump is off, 1: Pump is on

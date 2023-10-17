@@ -18,6 +18,10 @@
 
 static const char *TAG = "ultrasonic";
 
+float distance_cm = 0.0;
+float distance_percentage = 0.0;  
+uint16_t distance_percentage_rounded = 0; 
+
 ultrasonic_sensor_t ultrasonic = {
     .trigger_pin = 0,
     .echo_pin = 2,
