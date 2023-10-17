@@ -17,6 +17,7 @@
 #include "connect_wifi.h"
 #include "esp_http_client.h"
 #include "ultrasonic.h"
+#include "ultrasonic_task.h"
 
 #define I2C_MASTER_SCL_IO 26        /*!< gpio number for I2C master clock */
 #define I2C_MASTER_SDA_IO 25        /*!< gpio number for I2C master data  */
@@ -29,11 +30,10 @@
 //#define ADC_CHANNEL_6 36
 //#define PUMP 27
 
-#define FULL_DISTANCE_CM 1
-#define EMPTY_DISTANCE_CM 8
+// #define FULL_DISTANCE_CM 1
+// #define EMPTY_DISTANCE_CM 8
 
 static const char *TAG = "HTTP_CLIENT";
-static const char *TAG2 = "ultrasonic";
 
 char api_key[] = "AI7LUUZI0USAXOAJ";
 
@@ -45,15 +45,19 @@ char message[] = "Hello This is a test message";
 //int16_t adc_percentage = 50;
 SemaphoreHandle_t adc_semaphore = NULL;
 //uint16_t distance_cm;
-float distance_cm;
+// float distance_cm;
 //uint16_t distance_percentage;
+// float distance_percentage;
+// uint16_t distance_percentage_rounded;
+float distance_cm;
 float distance_percentage;
 uint16_t distance_percentage_rounded;
 
-ultrasonic_sensor_t ultrasonic = {
-    .trigger_pin = 0,
-    .echo_pin = 2,
-};
+
+// ultrasonic_sensor_t ultrasonic = {
+//     .trigger_pin = 0,
+//     .echo_pin = 2,
+// };
 
 void setup(){
     yl69_setup(YL69_ADC_CHANNEL);
@@ -173,61 +177,8 @@ void ssd1306_task(void *pvParameters){
 
         ssd1306_refresh_gram(ssd1306_dev);
 
-        // vTaskDelay(10000 / portTICK_PERIOD_MS); // Delay for 20 seconds
-
-        // // Update data strings based on DHT22 data or other sensors
-        // snprintf(data_str1, sizeof(data_str1), "PUMP OFF");
-        // snprintf(data_str2, sizeof(data_str2), "Water level: %d%%", distance_percentage);
-        // snprintf(data_str3, sizeof(data_str3), "WIFI ON");
-
-        // // Clear the SSD1306 screen
-        // ssd1306_clear_screen(ssd1306_dev, 0x00);
-        // // ...
-
-        // // Draw strings on the SSD1306 display
-        // ssd1306_draw_string(ssd1306_dev, 10, 5, (const uint8_t *)data_str1, 12, 1);
-        // ssd1306_draw_string(ssd1306_dev, 10, 25, (const uint8_t *)data_str2, 12, 1);
-        // ssd1306_draw_string(ssd1306_dev, 10, 45, (const uint8_t *)data_str3, 12, 1);
-        // ssd1306_refresh_gram(ssd1306_dev);
-
         vTaskDelay(5000 / portTICK_PERIOD_MS); // Delay for 20 seconds
     }
-}
-
-// Calculate the percentage based on the current distance
-double calculate_percentage(double current_distance_cm) {
-    // Ensure that the distance is within the valid range
-    if (current_distance_cm < FULL_DISTANCE_CM) {
-        return 100.0; // Tank is full
-    } else if (current_distance_cm >= EMPTY_DISTANCE_CM) {
-        return 0.0; // Tank is empty
-    } else {
-        // Calculate the percentage using linear interpolation
-        distance_percentage = 100.0 - ((current_distance_cm - FULL_DISTANCE_CM) /
-                                      (EMPTY_DISTANCE_CM - FULL_DISTANCE_CM) * 100.0);
-        return distance_percentage;
-    }
-}
-
-void ultrasonic_task(void *pvParameters){
-    esp_err_t res = ultrasonic_init(&ultrasonic);
-
-    while (1){
-        res = ultrasonic_measure_cm(&ultrasonic, 50, &distance_cm);
-
-        if (res == ESP_OK) {
-            distance_percentage = calculate_percentage(distance_cm);
-            uint16_t rounded_distance_cm = (int)(distance_cm + 0.5); // Round to the nearest integer
-            distance_percentage_rounded = (int)(distance_percentage + 0.5); // Round to the nearest integer
-            //ESP_LOGI(TAG2, "measure %d, percentage = %d", rounded_distance_cm, distance_percentage_rounded);
-            ESP_LOGI(TAG2, "measure %d, distance_cm = %.2f, distance_percentage = %d", rounded_distance_cm, distance_cm, distance_percentage_rounded);
-
-
-
-        }
-        vTaskDelay(5000 / portTICK_PERIOD_MS);
-    }
-    
 }
 
 void app_main(void){
