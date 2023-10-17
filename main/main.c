@@ -108,7 +108,7 @@ void thingspeak_send_data(void *pvParameters)
         }
         esp_http_client_cleanup(client);
 
-        vTaskDelay(20000 / portTICK_PERIOD_MS); // Delay for 20 seconds
+        vTaskDelay(60000 / portTICK_PERIOD_MS); // Delay for 20 seconds
     }
 }
 
