@@ -1,9 +1,17 @@
 #include "connect_wifi.h"
+#include "esp_system.h"
+#include "esp_log.h"
+#include "esp_sntp.h"
 
 #define EXAMPLE_ESP_WIFI_SSID "EDGG-guest"
 #define EXAMPLE_ESP_WIFI_PASS ""
 
 #define EXAMPLE_ESP_MAXIMUM_RETRY 30
+#define INITIAL_RETRY_INTERVAL 2  // Initial retry interval in seconds
+#define MAX_RETRY_INTERVAL (86400 / EXAMPLE_ESP_MAXIMUM_RETRY) // Maximum retry interval for 30 retries in 24 hours
+
+#define MAX_RETRY_DURATION (EXAMPLE_ESP_MAXIMUM_RETRY * INITIAL_RETRY_INTERVAL)  // Maximum total retry duration (e.g., 30 retries or 60 seconds)
+
 
 /* FreeRTOS event group to signal when we are connected*/
 static EventGroupHandle_t s_wifi_event_group;
@@ -17,8 +25,10 @@ static EventGroupHandle_t s_wifi_event_group;
 
 static int s_retry_num = 0;
 int wifi_connect_status = 0;
+uint16_t retry_interval = INITIAL_RETRY_INTERVAL;
 
 static const char *TAG = "wifi_connect"; // TAG for debug
+
 
 static void event_handler(void *arg, esp_event_base_t event_base,
                           int32_t event_id, void *event_data)
@@ -31,9 +41,19 @@ static void event_handler(void *arg, esp_event_base_t event_base,
     {
         if (s_retry_num < EXAMPLE_ESP_MAXIMUM_RETRY)
         {
+            ESP_LOGI(TAG, "retry to connect to the AP");
+
+            // Exponential backoff
+            retry_interval = (int)(retry_interval * 2);
+            if (retry_interval > MAX_RETRY_INTERVAL) {
+                retry_interval = MAX_RETRY_INTERVAL;
+            }
+
+            // Delay before retrying the connection
+            vTaskDelay(retry_interval * 1000 / portTICK_PERIOD_MS);
+
             esp_wifi_connect();
             s_retry_num++;
-            ESP_LOGI(TAG, "retry to connect to the AP");
         }
         else
         {
@@ -51,6 +71,7 @@ static void event_handler(void *arg, esp_event_base_t event_base,
         wifi_connect_status = 1;
     }
 }
+
 
 void connect_wifi(void)
 {
@@ -87,6 +108,7 @@ void connect_wifi(void)
             //.threshold.authmode = WIFI_AUTH_WPA2_PSK,
         },
     };
+
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
     ESP_ERROR_CHECK(esp_wifi_start());
