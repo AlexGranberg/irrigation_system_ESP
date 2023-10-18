@@ -24,8 +24,6 @@ static const char *TAG = "HTTP_CLIENT";
 
 char api_key[] = "AI7LUUZI0USAXOAJ";
 
-char message[] = "Hello This is a test message";
-
 
 void thingspeak_send_data(void *pvParameters)
 {
@@ -34,12 +32,6 @@ void thingspeak_send_data(void *pvParameters)
         float humidity_float = (float)humidity / 10.0;
         float temperature_float = (float)temperature / 10.0;
         char thingspeak_url[200];
-        // snprintf(thingspeak_url,
-        //          sizeof(thingspeak_url),
-        //          "%s%s%s%s%s",
-        //          "https://api.thingspeak.com/update?api_key=",
-        //          api_key,
-        //          "&field1=", data1, "&field2=", data2);
         snprintf(thingspeak_url,
                 sizeof(thingspeak_url),
                 "%s%s&field1=%.1f&field2=%.1f&field3=%d&field4=%d",
