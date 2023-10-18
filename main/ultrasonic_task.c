@@ -57,7 +57,7 @@ void ultrasonic_task(void *pvParameters){
             ESP_LOGI(TAG, "measure %d, distance_cm = %.2f, distance_percentage = %d", rounded_distance_cm, distance_cm, distance_percentage_rounded);
 
         }
-        vTaskDelay(5000 / portTICK_PERIOD_MS);
+        vTaskDelay(20000 / portTICK_PERIOD_MS);
     }
     
 }
