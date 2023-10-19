@@ -1,3 +1,5 @@
 /.devcontainer
 /.vscode
 /pytest_hello_world.py
+build
+sdkconfig
