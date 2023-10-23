@@ -30,10 +30,10 @@ This project requires the following hardware components:
 To use this code and set up the Automatic Watering System, follow these steps:
 1. Assemble the hardware components as per the provided schematics or documentation.
 2. Set up the ESP32 development environment.
-3. Flash the code onto the ESP32 microcontroller.
+3. Ensure your Catch2 unit testing environment is set up (if required).
 4. Configure WiFi credentials and ThingSpeak API key in the code.
-5. Upload the code to the ESP32 and monitor the system through the OLED display.
-6. Ensure your Catch2 unit testing environment is set up (if required).
+5. Flash the code onto the ESP32 microcontroller.
+6. Monitor the system through the OLED display and Thingspeak.
 
 ## Code Structure
 
