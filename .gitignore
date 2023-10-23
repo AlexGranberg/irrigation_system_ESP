@@ -1,3 +1,7 @@
 /.devcontainer
 /.vscode
 /pytest_hello_world.py
+/.build
+sdkconfig
+/unit_tests/build/
+/unit_tests/lib/
