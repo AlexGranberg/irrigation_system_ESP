@@ -11,6 +11,7 @@ The second phase of this project involves expanding its capabilities for use in 
 - Implementation of MQTT protocol to enable communication between several ESP32 devices.
 - Over-The-Air (OTA) updates for remote firmware upgrades and maintenance.
 - Integration of multiple pumps and YL69 soil moisture sensors to support a larger and more complex irrigation system.
+- Installation of servos to control windows that open and closes based on temperature data.
 
 These enhancements will extend the system's functionality and scalability, making it suitable for more extensive agricultural applications.
 
