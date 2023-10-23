@@ -21,6 +21,26 @@
 
 #include "esp_adc_cal.h"
 
+void displayWaterSquare(ssd1306_handle_t ssd1306_dev, int distance_percentage) {
+    if (distance_percentage >= 0 && distance_percentage < 25) {
+        // Display the empty water square icon
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareEmpty88, 8, 8);
+    } else if (distance_percentage >= 25 && distance_percentage < 50) {
+        // Display the 25% filled water square icon
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareQuarter88, 8, 8);
+    } else if (distance_percentage >= 50 && distance_percentage < 75) {
+        // Display the 50% filled water square icon
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareHalf88, 8, 8);
+    } else if (distance_percentage >= 75 && distance_percentage < 100) {
+        // Display the 75% filled water square icon
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareThreeQuarter88, 8, 8);
+    } else if (distance_percentage >= 100) {
+        // Display the 100% filled water square icon
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareFull88, 8, 8);
+    }
+}
+
+
 void ssd1306_task(void *pvParameters){
     static ssd1306_handle_t ssd1306_dev = NULL;
     i2c_config_t conf;
@@ -63,22 +83,8 @@ void ssd1306_task(void *pvParameters){
         else {
             ssd1306_draw_bitmap(ssd1306_dev, 120, 47, c_chWiFiDisconnected88, 8, 8); 
         }
-        if (distance_percentage >= 0 && distance_percentage < 25) {
-            // Display the empty water square icon
-            ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareEmpty88, 8, 8);  
-        } else if (distance_percentage >= 25 && distance_percentage < 50) {
-            // Display the 25% filled water square icon
-            ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareQuarter88, 8, 8);
-        } else if (distance_percentage >= 50 && distance_percentage < 75) {
-            // Display the 50% filled water square icon
-            ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareHalf88, 8, 8);
-        } else if (distance_percentage >= 75 && distance_percentage < 100) {
-            // Display the 75% filled water square icon
-            ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareThreeQuarter88, 8, 8);
-        } else if (distance_percentage >= 100) {
-            // Display the 100% filled water square icon
-            ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareFull88, 8, 8);
-        }
+
+        displayWaterSquare(ssd1306_dev, distance_percentage);
 
         ssd1306_refresh_gram(ssd1306_dev);
 
