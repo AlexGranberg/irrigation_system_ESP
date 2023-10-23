@@ -67,15 +67,13 @@ Please refer to the individual source files for in-depth details on how each com
 ## Usage
 1. Build the project by compiling the source files. Ensure that you have the ESP32 toolchain installed and configured.
 
-2. Flash the compiled code onto your ESP32 microcontroller.
+2. Set your WiFi credentials and ThingSpeak API key in the appropriate sections of the code.
 
-3. Set your WiFi credentials and ThingSpeak API key in the appropriate sections of the code.
+3. Upload the code to your ESP32.
 
-4. Upload the code to your ESP32.
+4. Power on the system and monitor the OLED display to view real-time data and system status.
 
-5. Power on the system and monitor the OLED display to view real-time data and system status.
-
-6. (Optional) Execute the unit tests using Catch2 to ensure the reliability of the code.
+5. (Optional) Execute the unit tests using Catch2 to ensure the reliability of the code.
 
 ## Acknowledgments
 This Automatic Watering System project is beeing developed by Alexander Granberg.
