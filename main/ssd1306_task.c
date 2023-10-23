@@ -71,7 +71,6 @@ void ssd1306_task(void *pvParameters){
 
         // Clear the SSD1306 screen
         ssd1306_clear_screen(ssd1306_dev, 0x00);
-        // ...
 
         // Draw strings on the SSD1306 display
         ssd1306_draw_string(ssd1306_dev, 10, 5, (const uint8_t *)data_str1, 12, 1);
@@ -88,6 +87,6 @@ void ssd1306_task(void *pvParameters){
 
         ssd1306_refresh_gram(ssd1306_dev);
 
-        vTaskDelay(5000 / portTICK_PERIOD_MS); // Delay for 20 seconds
+        vTaskDelay(5000 / portTICK_PERIOD_MS);
     }
 }
