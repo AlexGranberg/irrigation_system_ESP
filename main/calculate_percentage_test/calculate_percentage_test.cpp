@@ -1,7 +1,7 @@
 #include <catch2/catch_all.hpp>
 
 extern "C" {
-#include "../calculate_percentage_test.h"
+#include "calculate_percentage_test.h"
 }
 
 TEST_CASE("calculate_percentage function tests", "[TEST]") {
