@@ -24,7 +24,7 @@ This project requires the following hardware components:
 - Ultrasonic sensor for reading water level
 - SSD1306 OLED display for displaying sensor data and system status
 
-![Project Hardware](link-to-image)
+![Project Hardware](schematics.png)
 
 ## Getting Started
 To use this code and set up the Automatic Watering System, follow these steps:
