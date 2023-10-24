@@ -21,29 +21,28 @@
 
 #include "esp_adc_cal.h"
 
+i2c_config_t conf;
+
 void displayWaterSquare(ssd1306_handle_t ssd1306_dev, int distance_percentage) {
     if (distance_percentage >= 0 && distance_percentage < 25) {
         // Display the empty water square icon
         ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareEmpty88, 8, 8);
-    } else if (distance_percentage >= 25 && distance_percentage < 50) {
+    } else if (distance_percentage >= 25 && distance_percentage < 40) {
         // Display the 25% filled water square icon
         ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareQuarter88, 8, 8);
-    } else if (distance_percentage >= 50 && distance_percentage < 75) {
+    } else if (distance_percentage >= 40 && distance_percentage < 60) {
         // Display the 50% filled water square icon
         ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareHalf88, 8, 8);
-    } else if (distance_percentage >= 75 && distance_percentage < 100) {
+    } else if (distance_percentage >= 60 && distance_percentage < 80) {
         // Display the 75% filled water square icon
         ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareThreeQuarter88, 8, 8);
-    } else if (distance_percentage >= 100) {
+    } else if (distance_percentage >= 80) {
         // Display the 100% filled water square icon
         ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareFull88, 8, 8);
     }
 }
 
-
-void ssd1306_task(void *pvParameters){
-    static ssd1306_handle_t ssd1306_dev = NULL;
-    i2c_config_t conf;
+void i2c_master_init(){
     conf.mode = I2C_MODE_MASTER;
     conf.sda_io_num = (gpio_num_t)I2C_MASTER_SDA_IO;
     conf.sda_pullup_en = GPIO_PULLUP_ENABLE;
@@ -51,6 +50,11 @@ void ssd1306_task(void *pvParameters){
     conf.scl_pullup_en = GPIO_PULLUP_ENABLE;
     conf.master.clk_speed = I2C_MASTER_FREQ_HZ;
     conf.clk_flags = I2C_SCLK_SRC_FLAG_FOR_NOMAL;
+}
+
+void ssd1306_task(void *pvParameters){
+    static ssd1306_handle_t ssd1306_dev = NULL;
+    i2c_master_init();
 
     i2c_param_config(I2C_MASTER_NUM, &conf);
     i2c_driver_install(I2C_MASTER_NUM, conf.mode, 0, 0, 0);
@@ -72,9 +76,6 @@ void ssd1306_task(void *pvParameters){
             ssd1306_clear_screen(ssd1306_dev, 0x00);
             ssd1306_draw_bitmap(ssd1306_dev, 0, 0, epd_bitmap_allArray[gif_frame_index], 128, 64);
 
-            // Delay for a short period (adjust the delay to control GIF animation speed)
-            //vTaskDelay(100 / portTICK_PERIOD_MS);
-
             // Increment the frame index
             gif_frame_index++;
             if (gif_frame_index >= epd_bitmap_allArray_LEN) {
@@ -88,10 +89,8 @@ void ssd1306_task(void *pvParameters){
             snprintf(data_str2, sizeof(data_str2), "Temperature: %.1fc", (float)temperature / 10.0);
             snprintf(data_str3, sizeof(data_str3), "Soil: %d%%", adc_percentage);
 
-            // Clear the SSD1306 screen
             ssd1306_clear_screen(ssd1306_dev, 0x00);
 
-            // Draw strings on the SSD1306 display
             ssd1306_draw_string(ssd1306_dev, 10, 5, (const uint8_t *)data_str1, 12, 1);
             ssd1306_draw_string(ssd1306_dev, 10, 25, (const uint8_t *)data_str2, 12, 1);
             ssd1306_draw_string(ssd1306_dev, 10, 45, (const uint8_t *)data_str3, 12, 1);
