@@ -24,7 +24,11 @@ This project requires the following hardware components:
 - Ultrasonic sensor for reading water level
 - SSD1306 OLED display for displaying sensor data and system status
 
-![Project Hardware](link-to-image)
+![Project Hardware](schematics.png)
+Could not find the correct esp32 on wokwi so if you dont want to change the code the:
+- Trigger from HC-sr04 should go to pin 0
+- dht should go to pin 16
+- yl69 VCC should go to pin 17 "Using a voltage (VCC) on the pin ensures that it doesn't read all the time, which can cause corrosion on the sensor"
 
 ## Getting Started
 To use this code and set up the Automatic Watering System, follow these steps:
@@ -41,14 +45,14 @@ The project's code is organized into the following source files and tasks:
 
 - `main.c`: This file serves as the entry point for the project and orchestrates various tasks responsible for managing specific system components:
 
-    - `yl69_task`: A FreeRTOS task dedicated to handling the YL69 soil moisture sensor.
+    - `yl69_task`: A FreeRTOS task dedicated to handling the YL69 soil moisture sensor and the pump.
     - `dht22_task`: Manages the DHT22 temperature and humidity sensor.
     - `ssd1306_task`: Controls the SSD1306 OLED display.
     - `ultrasonic_task`: Manages the ultrasonic sensor for water level measurement.
 
 - `connect_wifi()`: This function initiates the WiFi connection for data transmission to ThingSpeak.
 
-- `if (wifi_connect_status)`: A conditional statement that checks the success of the WiFi connection. If successful, it proceeds to create the `thingspeak_send_data` task for sending data to ThingSpeak.
+- `if (wifi_connect_status)`: A conditional statement that checks the success of the WiFi connection. If successful, it proceeds to create the `send_data_task` task for sending data to ThingSpeak.
 
 - `dht.c`: Contains functions for interfacing with the DHT22 sensor to read temperature and humidity data.
 
@@ -59,6 +63,8 @@ The project's code is organized into the following source files and tasks:
 - `connect_wifi.c`: Handles WiFi connectivity.
 
 - `ssd1306.c`: Manages the OLED display to visualize soil moisture, temperature, humidity, water level, and WiFi status.
+
+- `ssd1306_fonts.c`: Contains fonts, icons and gif data.
 
 - `send_data_task.c`: Manage the connection to Thinkspeak and sends data.
 
