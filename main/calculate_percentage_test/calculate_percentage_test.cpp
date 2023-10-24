@@ -36,23 +36,3 @@ TEST_CASE("calculate_percentage function tests", "[TEST]") {
         REQUIRE(result == expected);
     }
 }
-
-
-//     // SECTION("Test when current_distance_cm is greater than or equal to EMPTY_DISTANCE_CM") {
-//     //     double current_distance_cm = 0.0; // Replace with your desired value
-//     //     double result = calculate_percentage(current_distance_cm);
-//     //     REQUIRE(result == Approx(0.0).margin(tolerance));
-//     // }
-
-//     // SECTION("Test with a value in between FULL_DISTANCE_CM and EMPTY_DISTANCE_CM") {
-//     //     double current_distance_cm = 75.0; // Replace with your desired value
-//     //     double result = calculate_percentage(current_distance_cm);
-//     //     double expected = 50.0; // Calculate the expected result manually
-//     //     REQUIRE(result == Approx(expected).margin(tolerance));
-//     // }
-// }
-
-// TEST_CASE("Our Second Test", "[Test]") {
-//     REQUIRE(1 == 1);
-// }
-
