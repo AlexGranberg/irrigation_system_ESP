@@ -25,6 +25,10 @@ This project requires the following hardware components:
 - SSD1306 OLED display for displaying sensor data and system status
 
 ![Project Hardware](schematics.png)
+Could not find the correct esp32 on wokwi so if you dont want to change the code the:
+- Trigger from HC-sr04 should go to pin 0
+- dht should go to pin 16
+- yl69 VCC should go to pin 17 "Using a voltage (VCC) on the pin ensures that it doesn't read all the time, which can cause corrosion on the sensor"
 
 ## Getting Started
 To use this code and set up the Automatic Watering System, follow these steps:
