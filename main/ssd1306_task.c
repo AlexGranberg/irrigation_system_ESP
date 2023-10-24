@@ -62,31 +62,53 @@ void ssd1306_task(void *pvParameters){
     char data_str1[20] = {0};
     char data_str2[25] = {0};
     char data_str3[40] = {0};
+    int gif_frame_index = 0;
+    extern uint8_t pump_state;
+
 
     while (1) {
-        // Update data strings based on DHT22 data or other sensors
-        snprintf(data_str1, sizeof(data_str1), "Humidity: %.1f%%", (float)humidity / 10.0);
-        snprintf(data_str2, sizeof(data_str2), "Temperature: %.1fc", (float)temperature / 10.0);
-        snprintf(data_str3, sizeof(data_str3), "Soil: %d%%", adc_percentage);
+        if (pump_state == 1){
+            // Display the current GIF frame
+            ssd1306_clear_screen(ssd1306_dev, 0x00);
+            ssd1306_draw_bitmap(ssd1306_dev, 0, 0, epd_bitmap_allArray[gif_frame_index], 128, 64);
 
-        // Clear the SSD1306 screen
-        ssd1306_clear_screen(ssd1306_dev, 0x00);
+            // Delay for a short period (adjust the delay to control GIF animation speed)
+            //vTaskDelay(100 / portTICK_PERIOD_MS);
 
-        // Draw strings on the SSD1306 display
-        ssd1306_draw_string(ssd1306_dev, 10, 5, (const uint8_t *)data_str1, 12, 1);
-        ssd1306_draw_string(ssd1306_dev, 10, 25, (const uint8_t *)data_str2, 12, 1);
-        ssd1306_draw_string(ssd1306_dev, 10, 45, (const uint8_t *)data_str3, 12, 1);
-        if (wifi_connect_status){
-            ssd1306_draw_bitmap(ssd1306_dev, 120, 47, c_chWiFiConnected88, 8, 8);    
+            // Increment the frame index
+            gif_frame_index++;
+            if (gif_frame_index >= epd_bitmap_allArray_LEN) {
+                gif_frame_index = 0; // Loop back to the first frame
+            }
+            ssd1306_refresh_gram(ssd1306_dev);
         }
-        else {
-            ssd1306_draw_bitmap(ssd1306_dev, 120, 47, c_chWiFiDisconnected88, 8, 8); 
+        else{
+            // Update data strings based on DHT22 data or other sensors
+            snprintf(data_str1, sizeof(data_str1), "Humidity: %.1f%%", (float)humidity / 10.0);
+            snprintf(data_str2, sizeof(data_str2), "Temperature: %.1fc", (float)temperature / 10.0);
+            snprintf(data_str3, sizeof(data_str3), "Soil: %d%%", adc_percentage);
+
+            // Clear the SSD1306 screen
+            ssd1306_clear_screen(ssd1306_dev, 0x00);
+
+            // Draw strings on the SSD1306 display
+            ssd1306_draw_string(ssd1306_dev, 10, 5, (const uint8_t *)data_str1, 12, 1);
+            ssd1306_draw_string(ssd1306_dev, 10, 25, (const uint8_t *)data_str2, 12, 1);
+            ssd1306_draw_string(ssd1306_dev, 10, 45, (const uint8_t *)data_str3, 12, 1);
+            if (wifi_connect_status){
+                ssd1306_draw_bitmap(ssd1306_dev, 120, 47, c_chWiFiConnected88, 8, 8);    
+            }
+            else {
+                ssd1306_draw_bitmap(ssd1306_dev, 120, 47, c_chWiFiDisconnected88, 8, 8); 
+            }
+
+            displayWaterSquare(ssd1306_dev, distance_percentage);
+
+            ssd1306_refresh_gram(ssd1306_dev);
+
         }
 
-        displayWaterSquare(ssd1306_dev, distance_percentage);
-
-        ssd1306_refresh_gram(ssd1306_dev);
-
-        vTaskDelay(5000 / portTICK_PERIOD_MS);
+    vTaskDelay(100 / portTICK_PERIOD_MS);
+    
     }
 }

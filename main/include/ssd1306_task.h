@@ -8,6 +8,9 @@
 #define I2C_MASTER_NUM I2C_NUM_1    /*!< I2C port number for master dev */
 #define I2C_MASTER_FREQ_HZ 100000   /*!< I2C master clock frequency */
 
+extern const int epd_bitmap_allArray_LEN;
+extern const unsigned char* epd_bitmap_allArray[];
+
 void ssd1306_task(void *pvParameters);
 
 #endif /* __ULTRASONIC_TASK_H__ */

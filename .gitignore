@@ -2,5 +2,6 @@
 /.vscode
 /pytest_hello_world.py
 ./build
+/build
 unit_tests/build
 unit_tests/lib
