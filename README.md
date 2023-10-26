@@ -34,6 +34,7 @@ Could not find the correct esp32 on wokwi so if you dont want to change the code
 - yl69 VCC should go to pin 17 "Using a voltage (VCC) on the pin ensures that it doesn't read all the time, which can cause corrosion on the sensor"
 
 Schematics created in KiCad, my first attempt, so there may be errors.
+![KiCad schematics](schematic_kicad.png)
 
 ## Getting Started
 To use this code and set up the Automatic Watering System, follow these steps:
