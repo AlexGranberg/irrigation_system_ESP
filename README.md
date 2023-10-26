@@ -66,7 +66,7 @@ The project's code is organized into the following source files and tasks:
 
 - `ultrasonic.c`: Interacts with the ultrasonic sensor to make measurements.
 
-- `connect_wifi.c`: Handles WiFi connectivity.
+- `connect_wifi.c`: Manages WiFi connectivity and includes an exponential backoff mechanism that increases the time between connection attempts to conserve power.
 
 - `ssd1306.c`: Manages the OLED display to visualize soil moisture, temperature, humidity, water level, and WiFi status.
 
