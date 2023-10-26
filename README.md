@@ -33,6 +33,7 @@ Could not find the correct esp32 on wokwi so if you dont want to change the code
 - dht should go to pin 16
 - yl69 VCC should go to pin 17 "Using a voltage (VCC) on the pin ensures that it doesn't read all the time, which can cause corrosion on the sensor"
 
+Schematics created in KiCad, my first attempt, so there may be errors.
 ![KiCad schematics](schematics_kicad.png)
 
 ## Getting Started
