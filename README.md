@@ -2,7 +2,7 @@
 # Automatic Watering System - Phase 1
 
 ## Overview
-The Automatic Watering System - Phase 1 is a project developed in C for the ESP32 microcontroller. This system is designed to automate the process of monitoring and maintaining soil moisture, temperature, and humidity levels, as well as controlling water levels and sending data to ThingSpeak. The project also includes unit testing using Catch2 to ensure code reliability.
+The Automatic Watering System - Phase 1 is a project developed in C for the ESP32 microcontroller. This system is designed to automate the process of monitoring and maintaining soil moisture, temperature, and humidity levels, as well as controlling water levels, limiting water usage to save on water and sending data to ThingSpeak. The project also includes unit testing using Catch2 to ensure code reliability.
 Second phase will be installed in a greenhouse, some of the improvements will be, MTTQ protocol to use several esp32, OTA, and several more pumps and yl69's. 
 
 A short movie is available for download if you would like to see it in action.
@@ -50,9 +50,9 @@ The project's code is organized into the following source files and tasks:
 
 - `main.c`: This file serves as the entry point for the project and orchestrates various tasks responsible for managing specific system components:
 
-    - `yl69_task`: A FreeRTOS task dedicated to handling the YL69 soil moisture sensor and the pump.
+    - `yl69_task`: A FreeRTOS task dedicated to handling the YL69 soil moisture sensor and controling when watering should be done by sending commands to the pump.
     - `dht22_task`: Manages the DHT22 temperature and humidity sensor.
-    - `ssd1306_task`: Controls the SSD1306 OLED display.
+    - `ssd1306_task`: Controls the SSD1306 OLED display, moniroting temperature, humidity, soil moisture, water level and wifi status.
     - `ultrasonic_task`: Manages the ultrasonic sensor for water level measurement.
 
 - `connect_wifi()`: This function initiates the WiFi connection for data transmission to ThingSpeak.
@@ -76,7 +76,7 @@ The project's code is organized into the following source files and tasks:
 Please refer to the individual source files for in-depth details on how each component of the system functions.
 
 ## Usage
-1. Build the project by compiling the source files. Ensure that you have the ESP32 toolchain installed and configured.
+1. Build the project by compiling the source files. Ensure that you have the ESP32 toolchain installed and configured. Im using VsCode and the ESP-IDF extension.
 
 2. Set your WiFi credentials and ThingSpeak API key in the appropriate sections of the code.
 
