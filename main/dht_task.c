@@ -16,7 +16,7 @@
 
 #include "esp_adc_cal.h"
 
-int16_t humidity = 0; // Declare as pointers and initialize
+int16_t humidity = 0;
 int16_t temperature = 0;
 
 void dht22_task(void *pvParameters){

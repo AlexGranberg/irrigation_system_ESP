@@ -84,7 +84,7 @@ void ssd1306_task(void *pvParameters){
             ssd1306_refresh_gram(ssd1306_dev);
         }
         else{
-            // Update data strings based on DHT22 data or other sensors
+            // Update data strings based on DHT22 & YL69 data sensors
             snprintf(data_str1, sizeof(data_str1), "Humidity: %.1f%%", (float)humidity / 10.0);
             snprintf(data_str2, sizeof(data_str2), "Temperature: %.1fc", (float)temperature / 10.0);
             snprintf(data_str3, sizeof(data_str3), "Soil: %d%%", adc_percentage);
