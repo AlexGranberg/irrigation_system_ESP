@@ -91,6 +91,6 @@ Please refer to the individual source files for in-depth details on how each com
 This Automatic Watering System project is beeing developed by Alexander Granberg.
 
 Feel free to modify and adapt this code for your own purposes or learn from it to create your own IoT-based projects.
-Please be aware that when using some components like `dht.c` and `ssd1306.c` etc that include code from other sources, you should comply with the associated licensing terms provided in those files. Feel free to modify and adapt this code for your own purposes or learn from it to create your own IoT-based projects. Respect the licenses and rights of the original authors.
+Please be aware that when using some components like `dht.c` and `ssd1306.c` etc that include code from other sources, you should comply with the associated licensing terms provided in those files. Respect the licenses and rights of the original authors.
 
 Enjoy automating your plant care with the Automatic Watering System - Phase 1!
