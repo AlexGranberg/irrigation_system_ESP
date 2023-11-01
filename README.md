@@ -2,8 +2,11 @@
 # Automatic Watering System - Phase 1
 
 ## Overview
-The Automatic Watering System - Phase 1 is a project developed in C for the ESP32 microcontroller. This system is designed to automate the process of monitoring and maintaining soil moisture, temperature, and humidity levels, as well as controlling water levels and sending data to ThingSpeak. The project also includes unit testing using Catch2 to ensure code reliability.
+The Automatic Watering System - Phase 1 is a project developed in C for the ESP32 microcontroller. This system is designed to automate the process of monitoring and maintaining soil moisture, temperature, and humidity levels, as well as controlling water levels, limiting water usage to save on water and sending data to ThingSpeak. The project also includes unit testing using Catch2 to ensure code reliability.
 Second phase will be installed in a greenhouse, some of the improvements will be, MTTQ protocol to use several esp32, OTA, and several more pumps and yl69's. 
+
+A short movie is available for download if you would like to see it in action.
+https://github.com/AlexGranberg/irrigation_system_ESP/blob/main/github_clip.mp4
 
 ## Future Developments (Phase 2)
 The second phase of this project involves expanding its capabilities for use in a greenhouse. The planned improvements include:
@@ -30,6 +33,9 @@ Could not find the correct esp32 on wokwi so if you dont want to change the code
 - dht should go to pin 16
 - yl69 VCC should go to pin 17 "Using a voltage (VCC) on the pin ensures that it doesn't read all the time, which can cause corrosion on the sensor"
 
+Schematics created in KiCad, my first attempt, so there may be errors.
+![KiCad schematics](schematic_kicad.png)
+
 ## Getting Started
 To use this code and set up the Automatic Watering System, follow these steps:
 1. Assemble the hardware components as per the provided schematics or documentation.
@@ -45,9 +51,9 @@ The project's code is organized into the following source files and tasks:
 
 - `main.c`: This file serves as the entry point for the project and orchestrates various tasks responsible for managing specific system components:
 
-    - `yl69_task`: A FreeRTOS task dedicated to handling the YL69 soil moisture sensor and the pump.
+    - `yl69_task`: A FreeRTOS task dedicated to handling the YL69 soil moisture sensor and controling when watering should be done by sending commands to the pump.
     - `dht22_task`: Manages the DHT22 temperature and humidity sensor.
-    - `ssd1306_task`: Controls the SSD1306 OLED display.
+    - `ssd1306_task`: Controls the SSD1306 OLED display, moniroting temperature, humidity, soil moisture, water level and wifi status.
     - `ultrasonic_task`: Manages the ultrasonic sensor for water level measurement.
 
 - `connect_wifi()`: This function initiates the WiFi connection for data transmission to ThingSpeak.
@@ -60,7 +66,7 @@ The project's code is organized into the following source files and tasks:
 
 - `ultrasonic.c`: Interacts with the ultrasonic sensor to make measurements.
 
-- `connect_wifi.c`: Handles WiFi connectivity.
+- `connect_wifi.c`: Manages WiFi connectivity and includes an exponential backoff mechanism that increases the time between connection attempts to conserve power.
 
 - `ssd1306.c`: Manages the OLED display to visualize soil moisture, temperature, humidity, water level, and WiFi status.
 
@@ -71,7 +77,7 @@ The project's code is organized into the following source files and tasks:
 Please refer to the individual source files for in-depth details on how each component of the system functions.
 
 ## Usage
-1. Build the project by compiling the source files. Ensure that you have the ESP32 toolchain installed and configured.
+1. Build the project by compiling the source files. Ensure that you have the ESP32 toolchain installed and configured. Im using VsCode and the ESP-IDF extension.
 
 2. Set your WiFi credentials and ThingSpeak API key in the appropriate sections of the code.
 
