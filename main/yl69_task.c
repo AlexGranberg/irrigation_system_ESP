@@ -30,7 +30,7 @@ void yl69_task(void *arg) {
     uint32_t reading_interval = 20000;
     uint16_t watering_timer = 0; // Timer to track how long the pump is on (in ms)
     uint16_t watering_timer_limit = 10000; // Set limit to 10 seconds (10,000 ms)
-    
+
     // Configure YL-69 power control pin as an output
     esp_rom_gpio_pad_select_gpio(YL69_READ_ACTIVE);
     gpio_set_direction(YL69_READ_ACTIVE, GPIO_MODE_OUTPUT);
@@ -60,6 +60,18 @@ void yl69_task(void *arg) {
             if (pump_state == 0) {
                 gpio_set_level(PUMP, 1);
                 pump_state = 1;
+                watering_timer = 0; // Reset the timer when the pump starts
+            }
+
+            else{
+                // If the pump is already on, increment the watering timer
+                watering_timer += 500; // Increment by 500ms based on vTaskDelay
+                if (watering_timer >= watering_timer_limit){
+                    //stop the pump after 10 seconds
+                    gpio_set_level(PUMP, 0);
+                    pump_state = 0;
+                    watering_timer = 0;
+                }
             }
         } else if (adc_percentage > 60) {
             // Soil is wet, decrease reading frequency to 20 seconds
