@@ -70,7 +70,7 @@ void yl69_task(void *arg) {
                     //stop the pump after 10 seconds
                     gpio_set_level(PUMP, 0);
                     pump_state = 0;
-                    watering_timer = 0;
+                    watering_timer = 0; // Reset for next cycle
                 }
             }
         } else if (adc_percentage > 60) {
@@ -81,6 +81,7 @@ void yl69_task(void *arg) {
             if (pump_state == 1) {
                 gpio_set_level(PUMP, 0);
                 pump_state = 0;
+                watering_timer = 0; // Reset for next cycle
             }
         }
 
