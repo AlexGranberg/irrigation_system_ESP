@@ -27,7 +27,7 @@ void setup(){
 }
 
 void yl69_task(void *arg) {
-    uint32_t reading_interval = 20000;
+    uint32_t reading_interval = 20000; // 20 seconds
     uint16_t watering_timer = 0; // Timer to track how long the pump is on (in ms)
     uint16_t watering_timer_limit = 10000; // Set limit to 10 seconds (10,000 ms)
 
