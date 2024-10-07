@@ -28,6 +28,8 @@ void setup(){
 
 void yl69_task(void *arg) {
     uint16_t adc_reading_counter = 0;
+    uint16_t watering_timer = 0;
+    uint16_t watering_timer_limit = 10000;
     // Configure YL-69 power control pin as an output
     esp_rom_gpio_pad_select_gpio(YL69_READ_ACTIVE);
     gpio_set_direction(YL69_READ_ACTIVE, GPIO_MODE_OUTPUT);
