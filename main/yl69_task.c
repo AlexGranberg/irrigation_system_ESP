@@ -17,7 +17,6 @@
 #include "esp_adc_cal.h"
 
 uint16_t adc_reading = 0;
-uint16_t adc_reading_counter = 0;
 uint16_t adc_percentage = 50;
 uint8_t pump_state = 0; // 0: Pump is off, 1: Pump is on
 
@@ -28,7 +27,7 @@ void setup(){
 }
 
 void yl69_task(void *arg) {
-    uint32_t reading_interval = 20000;
+    uint16_t adc_reading_counter = 0;
     // Configure YL-69 power control pin as an output
     esp_rom_gpio_pad_select_gpio(YL69_READ_ACTIVE);
     gpio_set_direction(YL69_READ_ACTIVE, GPIO_MODE_OUTPUT);
