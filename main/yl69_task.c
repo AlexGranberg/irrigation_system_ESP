@@ -17,6 +17,7 @@
 #include "esp_adc_cal.h"
 
 uint16_t adc_reading = 0;
+uint16_t adc_reading_counter = 0;
 uint16_t adc_percentage = 50;
 uint8_t pump_state = 0; // 0: Pump is off, 1: Pump is on
 
@@ -50,8 +51,8 @@ void yl69_task(void *arg) {
         adc_percentage = yl69_normalization(adc_reading);
 
         if (adc_percentage < 40) {
-            // Soil is dry, increase reading frequency to 1 second
-            reading_interval = 1000;
+            // Soil is dry, increase reading frequency to 2 second
+            reading_interval = 2000;
 
             // Check if the pump is off, then turn it on
             if (pump_state == 0) {
