@@ -3,7 +3,7 @@
 
 ## Overview
 The Automatic Watering System - Phase 1 is a project developed in C for the ESP32 microcontroller. This system is designed to automate the process of monitoring and maintaining soil moisture, temperature, and humidity levels, as well as controlling water levels, limiting water usage to save on water and sending data to ThingSpeak. The project also includes unit testing using Catch2 to ensure code reliability.
-Second phase will be installed in a greenhouse, some of the improvements will be, MTTQ protocol to use several esp32, OTA, and several more pumps and yl69's. 
+Second phase will be installed in a greenhouse, some of the improvements will be, MQTT protocol to use several esp32, OTA, and several more pumps and yl69's. 
 
 A short movie is available for download if you would like to see it in action.
 https://github.com/AlexGranberg/irrigation_system_ESP/blob/main/github_clip.mp4
@@ -91,6 +91,6 @@ Please refer to the individual source files for in-depth details on how each com
 This Automatic Watering System project is beeing developed by Alexander Granberg.
 
 Feel free to modify and adapt this code for your own purposes or learn from it to create your own IoT-based projects.
-Please be aware that when using some components like `dht.c` and `ssd1306.c` etc that include code from other sources, you should comply with the associated licensing terms provided in those files. Feel free to modify and adapt this code for your own purposes or learn from it to create your own IoT-based projects. Respect the licenses and rights of the original authors.
+Please be aware that when using some components like `dht.c` and `ssd1306.c` etc that include code from other sources, you should comply with the associated licensing terms provided in those files. Respect the licenses and rights of the original authors.
 
 Enjoy automating your plant care with the Automatic Watering System - Phase 1!
