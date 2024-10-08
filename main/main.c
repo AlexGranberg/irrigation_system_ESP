@@ -20,6 +20,9 @@
 #include "ultrasonic_task.h"
 #include "send_data_task.h"
 
+#define FIRMWARE_VERSION 		0.1
+#define UPDATE_JSON_URL 		"https:github.com/AlexGranberg/irrigation_system_ESP/tree/main/main"
+
 
 
 void app_main(void){
