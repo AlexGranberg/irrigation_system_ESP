@@ -140,10 +140,10 @@ void app_main(void){
     xTaskCreate(yl69_task, "yl69_task", 4*1024, NULL, 4, NULL);
     xTaskCreate(ssd1306_task, "ssd1306_task", 4096, NULL, 3, NULL);
     xTaskCreate(ultrasonic_task, "ultrasonic_task", 4096, NULL, 2, NULL);
-	xTaskCreate(check_update_task, "check_update_task", 8192, NULL, 5, NULL);
 
     connect_wifi();
 	if (wifi_connect_status){
 		xTaskCreate(thingspeak_send_data, "thingspeak_send_data", 8192, NULL, 6, NULL);
+		xTaskCreate(check_update_task, "check_update_task", 8192, NULL, 5, NULL);
 	}
 }
