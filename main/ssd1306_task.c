@@ -66,6 +66,7 @@ void ssd1306_task(void *pvParameters){
     char data_str1[20] = {0};
     char data_str2[25] = {0};
     char data_str3[40] = {0};
+    char data_str4[20] = {0};
     int gif_frame_index = 0;
     extern uint8_t pump_state;
 
@@ -94,6 +95,9 @@ void ssd1306_task(void *pvParameters){
             ssd1306_draw_string(ssd1306_dev, 10, 5, (const uint8_t *)data_str1, 12, 1);
             ssd1306_draw_string(ssd1306_dev, 10, 25, (const uint8_t *)data_str2, 12, 1);
             ssd1306_draw_string(ssd1306_dev, 10, 45, (const uint8_t *)data_str3, 12, 1);
+
+            ssd1306_draw_string(ssd1306_dev, 10, 45, (const uint8_t *)data_str3, 12, 1);
+
             if (wifi_connect_status){
                 ssd1306_draw_bitmap(ssd1306_dev, 120, 47, c_chWiFiConnected88, 8, 8);    
             }
