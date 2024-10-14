@@ -21,6 +21,8 @@
 
 #include "esp_adc_cal.h"
 
+#include "common.h"
+
 i2c_config_t conf;
 
 void displayWaterSquare(ssd1306_handle_t ssd1306_dev, int distance_percentage) {

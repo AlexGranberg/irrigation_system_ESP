@@ -23,7 +23,8 @@
 #include "esp_https_ota.h"
 #include "cJSON.h"
 
-#define FIRMWARE_VERSION 		0.01
+#include "common.h"
+
 #define UPDATE_JSON_URL 		"https://github.com/AlexGranberg/irrigation_system_ESP/tree/main/bin"
 
 // receive buffer
