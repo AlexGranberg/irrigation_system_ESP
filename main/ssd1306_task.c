@@ -89,6 +89,7 @@ void ssd1306_task(void *pvParameters){
             snprintf(data_str1, sizeof(data_str1), "Humidity: %.1f%%", (float)humidity / 10.0);
             snprintf(data_str2, sizeof(data_str2), "Temperature: %.1fc", (float)temperature / 10.0);
             snprintf(data_str3, sizeof(data_str3), "Soil: %d%%", adc_percentage);
+            snprintf(data_str4, sizeof(data_str4), "%.1f", (float)FIRMWARE_VERSION);
 
             ssd1306_clear_screen(ssd1306_dev, 0x00);
 
@@ -96,7 +97,7 @@ void ssd1306_task(void *pvParameters){
             ssd1306_draw_string(ssd1306_dev, 10, 25, (const uint8_t *)data_str2, 12, 1);
             ssd1306_draw_string(ssd1306_dev, 10, 45, (const uint8_t *)data_str3, 12, 1);
 
-            ssd1306_draw_string(ssd1306_dev, 10, 45, (const uint8_t *)data_str3, 12, 1);
+            ssd1306_draw_string(ssd1306_dev, 130, 47, (const uint8_t *)data_str4, 12, 1);
 
             if (wifi_connect_status){
                 ssd1306_draw_bitmap(ssd1306_dev, 120, 47, c_chWiFiConnected88, 8, 8);    
