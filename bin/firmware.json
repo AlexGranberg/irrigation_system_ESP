@@ -1,4 +1,4 @@
 {
-    "version": 0.01,
-    "file": "https://github.com/AlexGranberg/irrigation_system_ESP/tree/main/bin/auto_watering_ESP.bin"
+    "version": 0.02,
+    "file": "https://github.com/AlexGranberg/irrigation_system_ESP/tree/main/build/auto_watering_ESP.bin"
 }
