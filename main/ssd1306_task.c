@@ -91,7 +91,7 @@ void ssd1306_task(void *pvParameters){
             snprintf(data_str1, sizeof(data_str1), "Humidity: %.1f%%", (float)humidity / 10.0);
             snprintf(data_str2, sizeof(data_str2), "Temperature: %.1fc", (float)temperature / 10.0);
             snprintf(data_str3, sizeof(data_str3), "Soil: %d%%", adc_percentage);
-            snprintf(data_str4, sizeof(data_str4), "%.1f", (float)FIRMWARE_VERSION);
+            snprintf(data_str4, sizeof(data_str4), "%.2f", (float)FIRMWARE_VERSION);
 
             ssd1306_clear_screen(ssd1306_dev, 0x00);
 
