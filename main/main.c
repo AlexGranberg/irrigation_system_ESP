@@ -20,13 +20,13 @@
 #include "ultrasonic_task.h"
 #include "send_data_task.h"
 
-#include "esp_https_ota.h"
-#include "cJSON.h"
+//#include "esp_https_ota.h"
+//#include "cJSON.h"
 
 #include "common.h"
 
 #define UPDATE_JSON_URL 		"https://github.com/AlexGranberg/irrigation_system_ESP/tree/main/bin"
-
+/*
 // receive buffer
 char rcv_buffer[200];
 
@@ -126,6 +126,7 @@ void check_update_task(void *pvParameter) {
         vTaskDelay(30000 / portTICK_PERIOD_MS);
     }
 }
+*/
 
 void app_main(void){
 
@@ -145,6 +146,6 @@ void app_main(void){
     connect_wifi();
 	if (wifi_connect_status){
 		xTaskCreate(thingspeak_send_data, "thingspeak_send_data", 8192, NULL, 6, NULL);
-		xTaskCreate(check_update_task, "check_update_task", 8192, NULL, 5, NULL);
+		//xTaskCreate(check_update_task, "check_update_task", 8192, NULL, 5, NULL);
 	}
 }
