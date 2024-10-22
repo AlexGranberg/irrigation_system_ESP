@@ -54,7 +54,7 @@ void yl69_task(void *arg) {
 
         if (adc_percentage < 40) {
             // Soil is dry, increase reading frequency to 2 second
-            reading_interval = 2000;
+            reading_interval = 5000;
 
             // Check if the pump is off, then turn it on
             if (pump_state == 0) {
