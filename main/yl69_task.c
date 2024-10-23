@@ -72,7 +72,7 @@ void yl69_task(void *arg) {
                     pump_state = 0;
                     watering_timer = 0; // Reset for next cycle
 
-                    vTaskDelay(20000 / portTICK_PERIOD_MS); //20 sec delay
+                    vTaskDelay(20000 / portTICK_PERIOD_MS); // 20 sec delay
                 }
             }
         } else if (adc_percentage > 60) {
