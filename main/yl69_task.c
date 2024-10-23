@@ -53,8 +53,8 @@ void yl69_task(void *arg) {
         adc_percentage = yl69_normalization(adc_reading);
 
         if (adc_percentage < 40) {
-            // Soil is dry, increase reading frequency to 2 second
-            reading_interval = 5000;
+            // Soil is dry, increase reading frequency to 3 second
+            reading_interval = 3000;
 
             // Check if the pump is off, then turn it on
             if (pump_state == 0) {
@@ -66,8 +66,8 @@ void yl69_task(void *arg) {
             else{
                 // If the pump is already on, increment the watering timer
                 watering_timer += 500; // Increment by 500ms based on vTaskDelay
-                if (watering_timer >= watering_timer_limit){
-                    //stop the pump after 10 seconds
+                if (watering_timer >= watering_timer_limit || adc_percentage > 60){
+                    //stop the pump after 10 seconds or if the soil moisture is above 60%
                     gpio_set_level(PUMP, 0);
                     pump_state = 0;
                     watering_timer = 0; // Reset for next cycle
