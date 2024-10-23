@@ -72,10 +72,10 @@ void yl69_task(void *arg) {
                     pump_state = 0;
                     watering_timer = 0; // Reset for next cycle
 
-                    vTaskDelay(20000 / portTICK_PERIOD_MS); // 20 sec delay
+                    vTaskDelay(20000 / portTICK_PERIOD_MS); // 20 sec delay before checking again
                 }
             }
-        } else if (adc_percentage > 60) {
+        } else{
             // Soil is wet, decrease reading frequency to 20 seconds
             reading_interval = 20000;
 
