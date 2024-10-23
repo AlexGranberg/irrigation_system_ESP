@@ -64,7 +64,7 @@ void yl69_task(void *arg) {
             }
 
             else{
-                // If the pump is already on, increment the watering timer
+                // If the pump is on, increment the watering timer
                 watering_timer += 500; // Increment by 500ms based on vTaskDelay
                 if (watering_timer >= watering_timer_limit || adc_percentage > 60){
                     //stop the pump after 10 seconds or if the soil moisture is above 60%

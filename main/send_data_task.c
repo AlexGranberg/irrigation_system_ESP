@@ -22,7 +22,7 @@
 
 static const char *TAG = "HTTP_CLIENT";
 
-char api_key[] = "";
+char api_key[] = "AI7LUUZI0USAXOAJ";
 
 
 void thingspeak_send_data(void *pvParameters)
