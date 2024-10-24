@@ -63,7 +63,7 @@ void yl69_task(void *arg) {
                 watering_timer = 0; // Reset the timer when the pump starts
             }
 
-            while (watering_timer >= watering_timer_limit || adc_percentage > 60){
+            while (watering_timer <= watering_timer_limit || adc_percentage < 60){
                 vTaskDelay(2500 / portTICK_PERIOD_MS); // Wait for 500ms
                 watering_timer += 2500;  // Increase timer by 500ms
 
