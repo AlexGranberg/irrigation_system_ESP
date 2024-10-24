@@ -63,7 +63,23 @@ void yl69_task(void *arg) {
                 watering_timer = 0; // Reset the timer when the pump starts
             }
 
-            else{
+            while (watering_timer >= watering_timer_limit || adc_percentage > 60){
+                vTaskDelay(500 / portTICK_PERIOD_MS); // Wait for 500ms
+                watering_timer += 500;  // Increase timer by 500ms
+
+                // Update the moisture level again inside the loop
+                adc_reading = yl69_read();
+                adc_reading = adc_reading - adc_5VReading;
+                adc_percentage = yl69_normalization(adc_reading);
+            }
+            //stop the pump after 10 seconds or if the soil moisture is above 60%
+            gpio_set_level(PUMP, 0);
+            pump_state = 0;
+            watering_timer = 0; // Reset for next cycle
+
+            vTaskDelay(20000 / portTICK_PERIOD_MS); // 20 sec delay before checking again
+
+/*            {
                 // If the pump is on, increment the watering timer
                 watering_timer += 500; // Increment by 500ms based on vTaskDelay
                 if (watering_timer >= watering_timer_limit || adc_percentage > 60){
@@ -75,6 +91,7 @@ void yl69_task(void *arg) {
                     vTaskDelay(20000 / portTICK_PERIOD_MS); // 20 sec delay before checking again
                 }
             }
+            */
         } else{
             // Soil is wet, decrease reading frequency to 20 seconds
             reading_interval = 20000;
