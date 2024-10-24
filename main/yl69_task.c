@@ -64,8 +64,8 @@ void yl69_task(void *arg) {
             }
 
             while (watering_timer >= watering_timer_limit || adc_percentage > 60){
-                vTaskDelay(500 / portTICK_PERIOD_MS); // Wait for 500ms
-                watering_timer += 500;  // Increase timer by 500ms
+                vTaskDelay(2500 / portTICK_PERIOD_MS); // Wait for 500ms
+                watering_timer += 2500;  // Increase timer by 500ms
 
                 // Update the moisture level again inside the loop
                 adc_reading = yl69_read();
