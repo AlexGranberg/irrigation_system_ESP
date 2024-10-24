@@ -53,8 +53,8 @@ void yl69_task(void *arg) {
         adc_percentage = yl69_normalization(adc_reading);
 
         if (adc_percentage < 40) {
-            // Soil is dry, increase reading frequency to 3 second
-            reading_interval = 3000;
+            // Soil is dry, increase reading frequency to 2 second
+            reading_interval = 2000;
 
             // Check if the pump is off, then turn it on
             if (pump_state == 0) {
@@ -63,9 +63,9 @@ void yl69_task(void *arg) {
                 watering_timer = 0; // Reset the timer when the pump starts
             }
 
-            while (watering_timer <= watering_timer_limit || adc_percentage < 60){
-                vTaskDelay(2500 / portTICK_PERIOD_MS); // Wait for 500ms
-                watering_timer += 2500;  // Increase timer by 500ms
+            while (watering_timer < watering_timer_limit || adc_percentage <= 60){
+                vTaskDelay(2000 / portTICK_PERIOD_MS); // Wait for 500ms
+                watering_timer += 2000;  // Increase timer by 500ms
 
                 // Update the moisture level again inside the loop
                 adc_reading = yl69_read();
