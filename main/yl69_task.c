@@ -74,7 +74,6 @@ void yl69_task(void *arg) {
                 vTaskDelay(500 / portTICK_PERIOD_MS); // Wait for 500ms
 
                 gpio_set_level(YL69_READ_ACTIVE, 0);
-                vTaskDelay(reading_interval / portTICK_PERIOD_MS);
             }
             //stop the pump after 10 seconds or if the soil moisture is above 60%
             gpio_set_level(PUMP, 0);
