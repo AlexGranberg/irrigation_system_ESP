@@ -80,7 +80,7 @@ void yl69_task(void *arg) {
             gpio_set_level(PUMP, 0);
             pump_state = 0;
             watering_timer = 0; // Reset for next cycle
-
+            gpio_set_level(YL69_READ_ACTIVE, 0);
             vTaskDelay(20000 / portTICK_PERIOD_MS); // 20 sec delay before checking again
 
 /*            {
