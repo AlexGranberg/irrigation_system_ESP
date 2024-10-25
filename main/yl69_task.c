@@ -16,6 +16,8 @@
 
 #include "esp_adc_cal.h"
 
+static const char *TAG = "YL69";
+
 uint16_t adc_reading = 0;
 uint16_t adc_percentage = 50;
 uint8_t pump_state = 0; // 0: Pump is off, 1: Pump is on
@@ -27,7 +29,7 @@ void setup(){
 }
 
 void yl69_task(void *arg) {
-    uint32_t reading_interval = 20000; // 20 seconds
+    uint32_t reading_interval = 5000; // 20 seconds
     uint16_t watering_timer = 0; // Timer to track how long the pump is on (in ms)
     uint32_t watering_timer_limit = 10000; // Set limit to 10 seconds (10,000 ms)
 
@@ -64,14 +66,15 @@ void yl69_task(void *arg) {
             }
 
             while (watering_timer < watering_timer_limit || adc_percentage <= 60){
-                watering_timer += 500;  // Increase timer by 500ms
+                watering_timer += 1000;  // Increase timer by 500ms
 
                 // Update the moisture level again inside the loop
                 adc_reading = yl69_read();
                 adc_reading = adc_reading - adc_5VReading;
                 adc_percentage = yl69_normalization(adc_reading);
+                ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_percentage); // Add this line for debugging
 
-                vTaskDelay(500 / portTICK_PERIOD_MS); // Wait for 500ms
+                vTaskDelay(1000 / portTICK_PERIOD_MS); // Wait for 500ms
 
                 gpio_set_level(YL69_READ_ACTIVE, 0);
             }
