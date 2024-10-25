@@ -72,7 +72,7 @@ void yl69_task(void *arg) {
                 adc_reading = yl69_read();
                 adc_reading = adc_reading - adc_5VReading;
                 adc_percentage = yl69_normalization(adc_reading);
-                ESP_LOGI(TAG, "Raw ADC Reading: %d", adde c_percentage); // Add this line for debugging
+                ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_percentage); // Add this line for debugging
 
                 vTaskDelay(2000 / portTICK_PERIOD_MS); // Wait for 500ms
 
