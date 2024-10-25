@@ -47,6 +47,7 @@ void yl69_task(void *arg) {
 
     while(1) {
         gpio_set_level(YL69_READ_ACTIVE, 1);
+        vTaskDelay(100 / portTICK_PERIOD_MS); // Small delay for stable reading
 
         uint16_t adc_5VReading = 1050;
         adc_reading = yl69_read();
@@ -66,7 +67,8 @@ void yl69_task(void *arg) {
             }
 
             while (watering_timer < watering_timer_limit && adc_percentage <= 60){
-                watering_timer += 2000;  // Increase timer by 500ms
+                vTaskDelay(500 / portTICK_PERIOD_MS); // Wait for 500ms
+                watering_timer += 500;  // Increase timer by 500ms
 
                 // Update the moisture level again inside the loop
                 adc_reading = yl69_read();
@@ -74,7 +76,7 @@ void yl69_task(void *arg) {
                 adc_percentage = yl69_normalization(adc_reading);
                 ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_percentage); // Add this line for debugging
 
-                vTaskDelay(2000 / portTICK_PERIOD_MS); // Wait for 500ms
+               
 
                 gpio_set_level(YL69_READ_ACTIVE, 0);
             }
