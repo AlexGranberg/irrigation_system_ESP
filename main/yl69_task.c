@@ -65,7 +65,7 @@ void yl69_task(void *arg) {
                 watering_timer = 0; // Reset the timer when the pump starts
             }
 
-            while (watering_timer < watering_timer_limit || adc_percentage <= 60){
+            while (watering_timer < watering_timer_limit && adc_percentage <= 60){
                 watering_timer += 2000;  // Increase timer by 500ms
 
                 // Update the moisture level again inside the loop
@@ -100,7 +100,7 @@ void yl69_task(void *arg) {
             */
         } else{
             // Soil is wet, decrease reading frequency to 20 seconds
-            reading_interval = 20000;
+            reading_interval = 5000;
 
             // Check if the pump is on, then turn it off
             if (pump_state == 1) {
