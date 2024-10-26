@@ -28,19 +28,19 @@ i2c_config_t conf;
 void displayWaterSquare(ssd1306_handle_t ssd1306_dev, int distance_percentage) {
     if (distance_percentage >= 0 && distance_percentage < 25) {
         // Display the empty water square icon
-        ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareEmpty88, 8, 8);
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 50, c_chwaterSquareEmpty88, 8, 8);
     } else if (distance_percentage >= 25 && distance_percentage < 40) {
         // Display the 25% filled water square icon
-        ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareQuarter88, 8, 8);
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 50, c_chwaterSquareQuarter88, 8, 8);
     } else if (distance_percentage >= 40 && distance_percentage < 60) {
         // Display the 50% filled water square icon
-        ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareHalf88, 8, 8);
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 50, c_chwaterSquareHalf88, 8, 8);
     } else if (distance_percentage >= 60 && distance_percentage < 80) {
         // Display the 75% filled water square icon
-        ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareThreeQuarter88, 8, 8);
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 50, c_chwaterSquareThreeQuarter88, 8, 8);
     } else if (distance_percentage >= 80) {
         // Display the 100% filled water square icon
-        ssd1306_draw_bitmap(ssd1306_dev, 110, 47, c_chwaterSquareFull88, 8, 8);
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 50, c_chwaterSquareFull88, 8, 8);
     }
 }
 
@@ -88,24 +88,24 @@ void ssd1306_task(void *pvParameters){
         }
         else{
             // Update data strings based on DHT22 & YL69 data sensors
-            snprintf(data_str1, sizeof(data_str1), "Humidity: %.1f%%", (float)humidity / 10.0);
+            snprintf(data_str1, sizeof(data_str3), "Soil: %d%%", adc_percentage);
             snprintf(data_str2, sizeof(data_str2), "Temperature: %.1fc", (float)temperature / 10.0);
-            snprintf(data_str3, sizeof(data_str3), "Soil: %d%%", adc_percentage);
-            snprintf(data_str4, sizeof(data_str4), "version: %.2f", (float)FIRMWARE_VERSION);
+            snprintf(data_str3, sizeof(data_str1), "Humidity: %.1f%%", (float)humidity / 10.0);
+            snprintf(data_str4, sizeof(data_str4), "Version: %.2f", (float)FIRMWARE_VERSION);
 
             ssd1306_clear_screen(ssd1306_dev, 0x00);
 
-            ssd1306_draw_string(ssd1306_dev, 10, 5, (const uint8_t *)data_str1, 12, 1);
-            ssd1306_draw_string(ssd1306_dev, 10, 25, (const uint8_t *)data_str2, 12, 1);
-            ssd1306_draw_string(ssd1306_dev, 10, 45, (const uint8_t *)data_str3, 12, 1);
+            ssd1306_draw_string(ssd1306_dev, 0, 5, (const uint8_t *)data_str1, 12, 3);
+            ssd1306_draw_string(ssd1306_dev, 0, 20, (const uint8_t *)data_str2, 12, 3);
+            ssd1306_draw_string(ssd1306_dev, 0, 35, (const uint8_t *)data_str3, 12, 3);
             
-            ssd1306_draw_string(ssd1306_dev, 10, 65, (const uint8_t *)data_str4, 8, 1);
+            ssd1306_draw_string(ssd1306_dev, 0, 50, (const uint8_t *)data_str4, 12, 3);
 
             if (wifi_connect_status){
-                ssd1306_draw_bitmap(ssd1306_dev, 120, 47, c_chWiFiConnected88, 8, 8);    
+                ssd1306_draw_bitmap(ssd1306_dev, 120, 50, c_chWiFiConnected88, 8, 8);    
             }
             else {
-                ssd1306_draw_bitmap(ssd1306_dev, 120, 47, c_chWiFiDisconnected88, 8, 8); 
+                ssd1306_draw_bitmap(ssd1306_dev, 120, 50, c_chWiFiDisconnected88, 8, 8); 
             }
 
             displayWaterSquare(ssd1306_dev, distance_percentage);
