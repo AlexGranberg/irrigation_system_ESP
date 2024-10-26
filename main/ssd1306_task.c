@@ -28,19 +28,19 @@ i2c_config_t conf;
 void displayWaterSquare(ssd1306_handle_t ssd1306_dev, int distance_percentage) {
     if (distance_percentage >= 0 && distance_percentage < 25) {
         // Display the empty water square icon
-        ssd1306_draw_bitmap(ssd1306_dev, 110, 50, c_chwaterSquareEmpty88, 8, 8);
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 51, c_chwaterSquareEmpty88, 8, 8);
     } else if (distance_percentage >= 25 && distance_percentage < 40) {
         // Display the 25% filled water square icon
-        ssd1306_draw_bitmap(ssd1306_dev, 110, 50, c_chwaterSquareQuarter88, 8, 8);
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 51, c_chwaterSquareQuarter88, 8, 8);
     } else if (distance_percentage >= 40 && distance_percentage < 60) {
         // Display the 50% filled water square icon
-        ssd1306_draw_bitmap(ssd1306_dev, 110, 50, c_chwaterSquareHalf88, 8, 8);
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 51, c_chwaterSquareHalf88, 8, 8);
     } else if (distance_percentage >= 60 && distance_percentage < 80) {
         // Display the 75% filled water square icon
-        ssd1306_draw_bitmap(ssd1306_dev, 110, 50, c_chwaterSquareThreeQuarter88, 8, 8);
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 51, c_chwaterSquareThreeQuarter88, 8, 8);
     } else if (distance_percentage >= 80) {
         // Display the 100% filled water square icon
-        ssd1306_draw_bitmap(ssd1306_dev, 110, 50, c_chwaterSquareFull88, 8, 8);
+        ssd1306_draw_bitmap(ssd1306_dev, 110, 51, c_chwaterSquareFull88, 8, 8);
     }
 }
 
@@ -102,10 +102,10 @@ void ssd1306_task(void *pvParameters){
             ssd1306_draw_string(ssd1306_dev, 0, 50, (const uint8_t *)data_str4, 12, 3);
 
             if (wifi_connect_status){
-                ssd1306_draw_bitmap(ssd1306_dev, 120, 50, c_chWiFiConnected88, 8, 8);    
+                ssd1306_draw_bitmap(ssd1306_dev, 120, 51, c_chWiFiConnected88, 8, 8);    
             }
             else {
-                ssd1306_draw_bitmap(ssd1306_dev, 120, 50, c_chWiFiDisconnected88, 8, 8); 
+                ssd1306_draw_bitmap(ssd1306_dev, 120, 51, c_chWiFiDisconnected88, 8, 8); 
             }
 
             displayWaterSquare(ssd1306_dev, distance_percentage);
