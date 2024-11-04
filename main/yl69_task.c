@@ -54,7 +54,7 @@ void yl69_task(void *arg) {
         //ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_reading); // Add this line for debugging
         adc_percentage = yl69_normalization(adc_reading);
 
-        if (adc_percentage < 30) {
+        if (adc_percentage < 38) {
             // Soil is dry, increase reading frequency to 2 second
             reading_interval = 2000;
 
@@ -75,7 +75,7 @@ void yl69_task(void *arg) {
                 //ESP_LOGI(TAG, "Percentage ADC Reading: %d", adc_percentage); // Add this line for debugging
             }
 
-            //stop the pump after 10 seconds or if the soil moisture is above 60%
+            //stop the pump after 10 seconds or if the soil moisture is above 50%
             gpio_set_level(PUMP, 0);
             pump_state = 0;
             watering_timer = 0; // Reset for next cycle
