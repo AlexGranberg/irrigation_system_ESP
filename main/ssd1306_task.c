@@ -95,11 +95,10 @@ void ssd1306_task(void *pvParameters){
 
             ssd1306_clear_screen(ssd1306_dev, 0x00);
 
-            ssd1306_draw_string(ssd1306_dev, 0, 5, (const uint8_t *)data_str1, 12, 3);
-            ssd1306_draw_string(ssd1306_dev, 0, 20, (const uint8_t *)data_str2, 12, 3);
-            ssd1306_draw_string(ssd1306_dev, 0, 35, (const uint8_t *)data_str3, 12, 3);
-            
-            ssd1306_draw_string(ssd1306_dev, 0, 50, (const uint8_t *)data_str4, 12, 3);
+            ssd1306_draw_string(ssd1306_dev, 0, 5,  (const uint8_t *)data_str1, 12, 3); //Soil 
+            ssd1306_draw_string(ssd1306_dev, 0, 20, (const uint8_t *)data_str2, 12, 3); //Temperature
+            ssd1306_draw_string(ssd1306_dev, 0, 35, (const uint8_t *)data_str3, 12, 3); //Humidity
+            ssd1306_draw_string(ssd1306_dev, 0, 50, (const uint8_t *)data_str4, 12, 3); //Version
 
             if (wifi_connect_status){
                 ssd1306_draw_bitmap(ssd1306_dev, 120, 51, c_chWiFiConnected88, 8, 8);    
