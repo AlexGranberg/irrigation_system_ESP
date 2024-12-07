@@ -54,9 +54,9 @@ void yl69_task(void *arg) {
         //ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_reading); // Add this line for debugging
         adc_percentage = yl69_normalization(adc_reading);
 
-        if (adc_percentage < 20) {
+        if (adc_percentage < 23) {
             // Soil is dry, increase reading frequency to 2 second
-            reading_interval = 2000;
+            reading_interval = 2500;
 
             // Check if the pump is off, then turn it on
             if (pump_state == 0) {
