@@ -95,6 +95,7 @@ void ssd1306_task(void *pvParameters){
 
             ssd1306_clear_screen(ssd1306_dev, 0x00);
 
+            // Draw strings
             ssd1306_draw_string(ssd1306_dev, 0, 5,  (const uint8_t *)data_str1, 12, 3); //Soil 
             ssd1306_draw_string(ssd1306_dev, 0, 20, (const uint8_t *)data_str2, 12, 3); //Temperature
             ssd1306_draw_string(ssd1306_dev, 0, 35, (const uint8_t *)data_str3, 12, 3); //Humidity
@@ -108,7 +109,6 @@ void ssd1306_task(void *pvParameters){
             }
 
             displayWaterSquare(ssd1306_dev, distance_percentage);
-
             ssd1306_refresh_gram(ssd1306_dev);
 
         }
