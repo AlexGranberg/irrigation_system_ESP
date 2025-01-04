@@ -66,13 +66,13 @@ void yl69_task(void *arg) {
             }
 
             while (watering_timer < watering_timer_limit && adc_percentage <= 50){
-                vTaskDelay(500 / portTICK_PERIOD_MS); // Wait for 500ms
-                watering_timer += 500;  // Increase timer by 500ms
+                vTaskDelay(2000 / portTICK_PERIOD_MS); // Wait for 500ms
+                watering_timer += 2000;  // Increase timer by 500ms
 
                 adc_reading = yl69_read();
                 adc_reading = adc_reading - adc_5VReading;
                 adc_percentage = yl69_normalization(adc_reading);
-                //ESP_LOGI(TAG, "Percentage ADC Reading: %d", adc_percentage); // Add this line for debugging
+                ESP_LOGI(TAG, "Percentage ADC Reading: %d", adc_percentage); // Add this line for debugging
             }
 
             //stop the pump after 10 seconds or if the soil moisture is above 50%
