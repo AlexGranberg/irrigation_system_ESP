@@ -29,7 +29,7 @@ void setup(){
 }
 
 void yl69_task(void *arg) {
-    uint32_t reading_interval = 20000; // 20 seconds
+    uint32_t reading_interval = 20000; // 20 seconds for wet soil
     uint16_t watering_timer = 0; // Timer to track how long the pump is on (in ms)
     uint32_t watering_timer_limit = 10000; // Set limit to 10 seconds (10,000 ms)
 
@@ -37,26 +37,23 @@ void yl69_task(void *arg) {
     esp_rom_gpio_pad_select_gpio(YL69_READ_ACTIVE);
     gpio_set_direction(YL69_READ_ACTIVE, GPIO_MODE_OUTPUT);
 
-    // Turn off the YL-69 sensor initially
-    gpio_set_level(YL69_READ_ACTIVE, 0);
-
     // Initialize the pump pin
     esp_rom_gpio_pad_select_gpio(PUMP);
     gpio_set_direction(PUMP, GPIO_MODE_OUTPUT);
     gpio_set_level(PUMP, 0);
 
     while(1) {
+        // Turn the sensor ON, take a reading, and then turn it OFF
         gpio_set_level(YL69_READ_ACTIVE, 1);
-
-        uint16_t adc_5VReading = 1050;
-        adc_reading = yl69_read();
-        adc_reading = adc_reading - adc_5VReading;
-        //ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_reading); // Add this line for debugging
+        vTaskDelay(10 / portTICK_PERIOD_MS);  // wait 10ms
+        adc_reading = yl69_read(); // no offset
         adc_percentage = yl69_normalization(adc_reading);
+        ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_reading); // Add this line for debugging
+        gpio_set_level(YL69_READ_ACTIVE, 0);  // Turn off the sensor
 
         if (adc_percentage < 23) {
             // Soil is dry, increase reading frequency to 2.5 second
-            reading_interval = 2500;
+            reading_interval = 2500; // Check every second
 
             // Check if the pump is off, then turn it on
             if (pump_state == 0) {
@@ -65,39 +62,41 @@ void yl69_task(void *arg) {
                 watering_timer = 0; // Reset the timer when the pump starts
             }
 
-            while (watering_timer < watering_timer_limit && adc_percentage <= 50){
-                vTaskDelay(2000 / portTICK_PERIOD_MS); // Wait for 2000ms
-                watering_timer += 2000;  // Increase timer by 2000ms
+            // Keep the pump on for the watering_timer_limit (10 seconds) or until soil moisture is above 50%
+            while (watering_timer < watering_timer_limit && adc_percentage <= 50) {
+                vTaskDelay(1000 / portTICK_PERIOD_MS);  // Wait for 1 second
+                watering_timer += 1000;  // Increase timer by 1000ms (1 second)
 
-                adc_reading = yl69_read();
-                adc_reading = adc_reading - adc_5VReading;
+                // Read moisture level again in the cycle
+                gpio_set_level(YL69_READ_ACTIVE, 1);  // Turn on sensor for reading
+                vTaskDelay(10 / portTICK_PERIOD_MS);  // wait 10ms
+                adc_reading = yl69_read(); // no offset
                 adc_percentage = yl69_normalization(adc_reading);
+                ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_reading); // Add this line for debugging
                 ESP_LOGI(TAG, "Percentage ADC Reading: %d", adc_percentage); // Add this line for debugging
+                gpio_set_level(YL69_READ_ACTIVE, 0);  // Turn off sensor after reading
             }
 
-            //stop the pump after 10 seconds or if the soil moisture is above 50%
+            // Stop the pump after 10 seconds or if the soil moisture is above 50%
             gpio_set_level(PUMP, 0);
             pump_state = 0;
             watering_timer = 0; // Reset for next cycle
-            gpio_set_level(YL69_READ_ACTIVE, 0);
-            vTaskDelay(20000 / portTICK_PERIOD_MS); // 20 sec delay before checking again
+            vTaskDelay(1000 / portTICK_PERIOD_MS); // 1 second delay before checking again
 
-        } else{
+        } else {
             // Soil is wet, decrease reading frequency to 20 seconds
-            reading_interval = 20000;
+            reading_interval = 20000; // Check every 20 seconds
             ESP_LOGI(TAG, "Percentage ADC Reading: %d", adc_percentage); // Add this line for debugging
 
             // Check if the pump is on, then turn it off
             if (pump_state == 1) {
                 gpio_set_level(PUMP, 0);
                 pump_state = 0;
-                watering_timer = 0; // Reset for next cycle
             }
+
+            // Wait for the reading interval before checking moisture again
+            vTaskDelay(reading_interval / portTICK_PERIOD_MS);
         }
-
-        vTaskDelay(500 / portTICK_PERIOD_MS);
-        gpio_set_level(YL69_READ_ACTIVE, 0);
-
-        vTaskDelay(reading_interval / portTICK_PERIOD_MS);
     }
 }
+

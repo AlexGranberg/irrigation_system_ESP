@@ -10,6 +10,9 @@
 
 #include "esp_adc_cal.h"
 
+#define VALUE_DRY 800  // Lower ADC value when the soil is dry
+#define VALUE_WET 3800  // Higher ADC value when the soil is wet
+#define ADC_MIN_THRESHOLD 100 // Set a threshold value
 
 static adc1_channel_t channel;
 static esp_adc_cal_characteristics_t *adc_chars;
@@ -40,6 +43,18 @@ uint32_t yl69_read() {
     return adc_reading;
 }
 
-uint32_t yl69_normalization(uint32_t value_t) {
-    return (value_t * 100) / VALUE_MAX;
+uint32_t yl69_normalization(uint32_t raw_adc) {
+    if (raw_adc < ADC_MIN_THRESHOLD) {
+        return 0;  // Consider a reading below threshold as invalid (or set it to 0%)
+    }
+
+    if (raw_adc > VALUE_WET) raw_adc = VALUE_WET;
+    if (raw_adc < VALUE_DRY) raw_adc = VALUE_DRY;
+
+    return ((raw_adc - VALUE_DRY) * 100) / (VALUE_WET - VALUE_DRY);
 }
+
+
+
+
+
