@@ -43,17 +43,15 @@ void yl69_task(void *arg) {
     gpio_set_level(PUMP, 0);
 
     while(1) {
-        // Turn the sensor ON, take a reading, and then turn it OFF
         gpio_set_level(YL69_READ_ACTIVE, 1);
         vTaskDelay(10 / portTICK_PERIOD_MS);  // wait 10ms
-        adc_reading = yl69_read(); // no offset
+        adc_reading = yl69_read();
         adc_percentage = yl69_normalization(adc_reading);
-        ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_reading); // Add this line for debugging
-        gpio_set_level(YL69_READ_ACTIVE, 0);  // Turn off the sensor
+        ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_reading);
+        gpio_set_level(YL69_READ_ACTIVE, 0);
 
         if (adc_percentage < 23) {
-            // Soil is dry, increase reading frequency to 2.5 second
-            reading_interval = 2500; // Check every second
+            reading_interval = 2500; // 1000 = 1 second
 
             // Check if the pump is off, then turn it on
             if (pump_state == 0) {
@@ -67,14 +65,16 @@ void yl69_task(void *arg) {
                 vTaskDelay(1000 / portTICK_PERIOD_MS);  // Wait for 1 second
                 watering_timer += 1000;  // Increase timer by 1000ms (1 second)
 
-                // Read moisture level again in the cycle
-                gpio_set_level(YL69_READ_ACTIVE, 1);  // Turn on sensor for reading
-                vTaskDelay(10 / portTICK_PERIOD_MS);  // wait 10ms
-                adc_reading = yl69_read(); // no offset
-                adc_percentage = yl69_normalization(adc_reading);
-                ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_reading); // Add this line for debugging
-                ESP_LOGI(TAG, "Percentage ADC Reading: %d", adc_percentage); // Add this line for debugging
-                gpio_set_level(YL69_READ_ACTIVE, 0);  // Turn off sensor after reading
+                if (adc_reading > 1){
+                    // Read moisture level again in the cycle
+                    gpio_set_level(YL69_READ_ACTIVE, 1);
+                    vTaskDelay(10 / portTICK_PERIOD_MS);  // wait 10ms
+                    adc_reading = yl69_read();
+                    adc_percentage = yl69_normalization(adc_reading);
+                    ESP_LOGI(TAG, "Raw ADC Reading: %d", adc_reading);
+                    ESP_LOGI(TAG, "Percentage ADC Reading: %d", adc_percentage);
+                    gpio_set_level(YL69_READ_ACTIVE, 0);
+                }
             }
 
             // Stop the pump after 10 seconds or if the soil moisture is above 50%
